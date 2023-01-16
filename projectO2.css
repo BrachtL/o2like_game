@@ -1,0 +1,13 @@
+#score {
+  border: 2p solid;
+  min-height: 100vh;
+
+  display: flex;
+  
+}
+
+aside {
+  background: lightgreen;
+  flex: 0 100px;
+
+}
