@@ -116,9 +116,54 @@ let timeTest = false;
 //let firstHalfEnd = 33000 - speedFactor*; //mark to up an octave in first song, change the notes
 
 let timeStamp;
-let range = 15; //range to consider good or miss
-let rangeP = 0; //range to consider perfect: max value = 7, negative number are possible, min value = -(range+1)
+let range = 16; //range to consider good or miss
+let rangeP = 1; //range to consider perfect: max value = 7, negative number are possible, min value = -(range+1)
 let perfect = 0, good = 0, miss = 0;
+
+
+let ranges = {
+  range,
+  rangeP
+};
+
+function getDifficulty() {  
+  let radioDifficulty = document.querySelectorAll('input[name="difficulty"]');
+  let ranges = {
+    range: 16,
+    rangeP: 1
+  }
+
+  for (radioButton of radioDifficulty) {
+    if(radioButton.checked) {
+      ranges.range += +radioButton.value;
+      ranges.rangeP += +radioButton.value; 
+    }
+  }
+  return ranges;
+}
+
+function disableButtons() {  
+  let radioDifficulty = document.querySelectorAll('input[name="difficulty"]');
+
+  for (radioButton of radioDifficulty) {
+    radioButton.disabled = true;
+  }
+
+}
+
+function enableButtons() {
+  let radioDifficulty = document.querySelectorAll('input[name="difficulty"]');
+
+  for (radioButton of radioDifficulty) {
+    radioButton.disabled = false;
+  }
+}
+
+
+
+
+
+
 
 function draw1() {  
   //musicTracker += musicSpeed; // o y é o musicTracker LOL
@@ -256,6 +301,7 @@ function music1Button() {
     y = 1000 + 43*sm+51*sm; //make the music "pass"
     isButton1Clicked = false;
     document.getElementById("music1").textContent = "Start music 1";
+    enableButtons();
   } else {
     timeStart = window.event.timeStamp; //timeStamp is been used to know when reatribute the notes
     console.log(window.event.timeStamp);
@@ -267,6 +313,11 @@ function music1Button() {
     document.getElementById("music1").textContent = "Stop music 1";
     miss = good = perfect = 0;
     
+    ranges = getDifficulty();
+    range = ranges.range;
+    rangeP = ranges.rangeP;
+
+    disableButtons();   
   }
 
 }
@@ -455,6 +506,12 @@ window.addEventListener("keydown", (event) => {
       return; // Quit when this doesn't handle the key event.
   }
 
+  document.getElementById("perfect").textContent = `Perfect: ${perfect}`;
+  document.getElementById("good").textContent = `Good: ${good}`;
+  document.getElementById("miss").textContent = `Miss: ${miss}`;
+
+  console.log(range + " " + rangeP);
+
   // Cancel the default action to avoid it being handled twice
   event.preventDefault();
 }, true);
@@ -470,20 +527,39 @@ console.log(ctx.getImageData(315, 850, 1, 1).data);
 console.log("projectO2 carregado com sucesso");
 
 //coisas que melhorariam esse programa:
+
+  // ----> REFATORAR O CÓDIGO:
+    //tirar o lixo do código (codigos comentados, guardar somente de backup num novo arquivo OLD, deixar esse aqui como o original)
+    //tirar o lixo do código (códigos que não são úteis)
+    //redefinir o nome de algumas coisas e/ou criar nome para o que não tem
+    //comentar o que cada parte do código faz, do início ao fim
+    //criar funções
+    //criar classes e objetos
+    //analisar se o código está dentro dos paradigmas
+    
+
+  //estudar MIDI file e importar midi file para gerar uma música!
+    //https://www.youtube.com/watch?v=Z3e8q1NLNmo&ab_channel=EdD
+    //https://people.carleton.edu/~jellinge/m208w14/pdf/02MIDIBasics_doc.pdf
   //soar a nota enquanto a tecla é apertada (e não por tempo)
   //fazer multiplayer
-  //trocar timeStamp para date.now (acho que nao preciso mais disso, agora estou usado os pixels percorridos)
   //gravar highscore e só resetar se apertar no botão reset
   //criar um novo arquivo, sem as coisas olds desse (tipo o firstHalfEnd e demais coisas comentadas)
     //limpar esse novo código atribuindo variáveis (nomes) aos números (tipo o que fiz com a seminima)
     //assim eu limpo o código, mas não perco coisas já feitas de outro jeito se quiser consultar
-  //passar código do console.log para a barra lateral esquerda
-    //completar com miss no final o que faltou de notas (total de notas - good - perfect = miss), se o cara só tem 3 miss e deveria ser 30, completar
+  
+    //fazer um sistema de miss
+      //mais fácil: completar com miss no final o que faltou de notas (total de notas - good - perfect = miss), se o cara só tem 3 miss e deveria ser 30, completar
+      //mais top: dar miss se era pra ter apertado a tecla e não apertou
   //pegar uma segunda música, de videogame (dueto, de preferência)
   //fazer o user poder trocar o timbre do oscillator
   //fazer uma música com timbre de piano real, e uma tecla tocar um acorde (mais que uma nota)
-    //talver fazer também que uma tecla toca um pequeno trechinho
+    //talvez fazer também que uma tecla toca um pequeno trechinho
   //fazer ajuste de dificuldade (mudando o range, tipo o que fiz com a velocidade)
+  //corrigir o sistema de dificuldades:
+    //o range e o rangeP estão mal feitos, quanto maior um mais dificil, mas com o outro é o contrário
+    //mudar isso e mudar como eu atribuo e reatribuo esses valores
+    //mudar os values no HTML
     
     
 //coisas feitas
@@ -493,3 +569,8 @@ console.log("projectO2 carregado com sucesso");
   //começar a contar um cronometro quando a música começa (quando os tiles começam a cair) e reatribuir sons às teclas
   //fazer um sistema de pontos: perfect, good e miss
   //ajuste de velocidade da música pelo user
+  //não precisei mais trocar timeStamp para date.now (estou usando os pixels percorridos)
+
+//Novidades deste commit:
+  //Scoreboard
+  //User can change difficulty (but it is bugged)
