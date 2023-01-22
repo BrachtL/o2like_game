@@ -1,24 +1,69 @@
 /*
 
+  Methods that could help me somewhere sometime {
+    //ctx.lineWidth = 5;
+    //ctx.fill();
+
+    
+    // First path
+    ctx.beginPath();
+    ctx.strokeStyle = 'blue';
+    ctx.moveTo(20, 20);
+    ctx.lineTo(200, 20);
+    ctx.stroke();
+
+    // Second path
+    ctx.beginPath();
+    ctx.strokeStyle = 'green';
+    ctx.moveTo(20, 20);
+    ctx.lineTo(120, 120);
+    ctx.stroke();
+    
+
+    //ctx.translate(width / 2, height / 2);
+
+    //window.requestAnimationFrame(function with a recall of requestAnimationFrame);
+    //window.cancelAnimationFrame(call it when the animation should stop)
+
+    
+    function loop() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+      ctx.fillRect(0, 0, width, height);
+
+      for (const ball of balls) {
+        ball.draw();
+        ball.update();
+        ball.collisionDetect();
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  } 
 
 */
 
 //background game inicialization
-let backgroundGame = document.querySelector(".backgroundGame");
+let gameWindow = document.querySelector(".gameWindow");
 let x0 = 200;
 let y0 = 0;
-let width = backgroundGame.width = 915 + x0;
+let width = gameWindow.width = 915 + x0;
 //let width = canvas.width = window.innerWidth;
-let height = backgroundGame.height = 915 + y0;
+let height = gameWindow.height = 915 + y0;
 //let height = canvas.height = window.innerHeight;
-let ctx = backgroundGame.getContext("2d");
+let ctx = gameWindow.getContext("2d");
+
 
 ctx.fillStyle = "rgb(0, 0, 0)";
-ctx.fillRect(x0, 0, 915, 915);
+ctx.fillRect(x0, y0, 915, 915);
+//fillRect(x0, y0, width, height);
+
 
 //7 keys inicialization
 ctx.fillStyle = "rgb(255, 0, 0)";
-//ctx.fillRect(x0+100, y0+720, x0+100+70, y0+720+30);
+
+//red keys
 ctx.fillRect(x0+115, y0+850, 70, 15);
 ctx.fillRect(x0+115+100, y0+850, 70, 15);
 ctx.fillRect(x0+115+2*100, y0+850, 70, 15);
@@ -27,63 +72,13 @@ ctx.fillRect(x0+115+4*100, y0+850, 70, 15);
 ctx.fillRect(x0+115+5*100, y0+850, 70, 15);
 ctx.fillRect(x0+115+6*100, y0+850, 70, 15);
 
+//blue key
 ctx.fillStyle = "rgb(0, 0, 255)"
 ctx.fillRect(x0+115+3*100, y0+850, 70, 15);
 
-/*ctx.fillStyle = "rgba(255, 0, 255, 0.75)";
-ctx.fillRect(225, 100, 175, 50);*/
-
-//ctx.lineWidth = 5;
-//ctx.fill();
-
-/*
-// First path
-ctx.beginPath();
-ctx.strokeStyle = 'blue';
-ctx.moveTo(20, 20);
-ctx.lineTo(200, 20);
-ctx.stroke();
-
-// Second path
-ctx.beginPath();
-ctx.strokeStyle = 'green';
-ctx.moveTo(20, 20);
-ctx.lineTo(120, 120);
-ctx.stroke();
-*/
-
-//ctx.strokeStyle = "rgb(255, 0, 255)";
-//ctx.strokeRect(25, 25, 175, 200);
-//ctx.translate(width / 2, height / 2);
-
-//window.requestAnimationFrame(/*function with a recall of requestAnimationFrame*/);
-//window.cancelAnimationFrame(/*call it when the animation should stop*/)
-
-/*
-function loop() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-  ctx.fillRect(0, 0, width, height);
-
-  for (const ball of balls) {
-    ball.draw();
-    ball.update();
-    ball.collisionDetect();
-  }
-
-  requestAnimationFrame(loop);
-}
-
-loop();*/
-
-//let tiles = document.querySelector(".tiles");
-//let x0 = 300;
-//let y0 = 30;
-//let width = canvas.width = window.innerWidth;
-//let height = canvas.height = window.innerHeight;
-//ctx = tiles.getContext("2d");
 
 let y = 0; //musicTracer (y axis position)
-let sm = 256; //seminima
+let sm = 256; //quarter note (seminima)
 
 let speedInput = document.getElementById("speed");
 let speedFactor = 0; // -2.0 to +2.0, step: 0.4 (HTML)
@@ -96,26 +91,15 @@ let firstHalfEnd2 = 12812; //12812 is the half music "length" in pixels, will va
   //256 -> sm
   // 47 -> last note of the first half is 43 and first note of the second half is 51, 47 is the middle
 
-//let musicTracker = 0; //o y é o musicTracker LOL
 
 speedInput.addEventListener('input', function() {
   //if(speedInput.length < 3) {
     speedFactor = this.value;
-    musicSpeed = 4 + 1*speedFactor;
+    musicSpeed = 4 + 1*speedFactor; //bug do JS? se não colocar o 1 atrás não funciona!
   //}
 });
 
 
-
-//backgroundGame = document.getElementById('.backgroundGame');
-//ctx = backgroundGame.getContext('2d');
-
-
-let timeStart = 0;
-let timeTest = false;
-//let firstHalfEnd = 33000 - speedFactor*; //mark to up an octave in first song, change the notes
-
-let timeStamp;
 let range = 16; //range to consider good or miss
 let rangeP = 1; //range to consider perfect: max value = 7, negative number are possible, min value = -(range+1)
 let perfect = 0, good = 0, miss = 0;
@@ -161,15 +145,11 @@ function enableButtons() {
 
 
 
-
-
-
-
 function draw1() {  
-  //musicTracker += musicSpeed; // o y é o musicTracker LOL
   // musicSpeed = 3 + 1*speedFactor; //bug do JS? se não colocar o 1 atrás não funciona!
 
   ctx.beginPath();
+
   //S (note C4)
   ctx.rect(x0+115, y, 70, 15);
   ctx.rect(x0+115, y-10*sm, 70, 15);
@@ -263,8 +243,8 @@ function draw1() {
   //repainting the static things (background and 7 keys)
   ctx.fillStyle = "rgb(0, 0, 0)";
   ctx.fillRect(x0, y0, 915, 915);
+
   ctx.fillStyle = "rgb(255, 0, 0)";
-  //ctx.fillRect(x0+100, y0+720, x0+100+70, y0+720+30);
   ctx.fillRect(x0+115, y0+850, 70, 15);
   ctx.fillRect(x0+115+100, y0+850, 70, 15);
   ctx.fillRect(x0+115+2*100, y0+850, 70, 15);
@@ -287,28 +267,24 @@ function draw1() {
   
 }
 
+let isButtonMusic1Clicked = false;
+let interval1; //interval for music1
 
-//draw1(); 
-//setInterval(draw1, 3);
-let isButton1Clicked = false;
-let interval1;
-
-clearInterval(interval1);
+//clearInterval(interval1);
 
 function music1Button() { 
-  if(isButton1Clicked) {
+  if(isButtonMusic1Clicked) {
     setTimeout(clearInterval, 15, interval1);
     y = 1000 + 43*sm+51*sm; //make the music "pass"
-    isButton1Clicked = false;
+    isButtonMusic1Clicked = false;
     document.getElementById("music1").textContent = "Start music 1";
     enableButtons();
   } else {
-    timeStart = window.event.timeStamp; //timeStamp is been used to know when reatribute the notes
-    console.log(window.event.timeStamp);
+    
     
     y = 0; //restart the music
     interval1 = setInterval(draw1, 7);
-    isButton1Clicked = true;   
+    isButtonMusic1Clicked = true;   
 
     document.getElementById("music1").textContent = "Stop music 1";
     miss = good = perfect = 0;
@@ -321,11 +297,6 @@ function music1Button() {
   }
 
 }
-
-
-
-
-
 
 
 //a=new AudioContext(); // browsers limit the number of concurrent audio contexts, so you better re-use'em
@@ -347,57 +318,12 @@ function beep(vol, freq, duration) {
   v.stop(a.currentTime+duration*0.001)
 }
 
-
   //beep(100,600,200);
-
-
-/*
-const audioCtx = new AudioContext();
-
-// create Oscillator node
-const oscillator = audioCtx.createOscillator();
-
-oscillator.type = "square";
-oscillator.frequency.setValueAtTime(3000, audioCtx.currentTime); // value in hertz
-oscillator.connect(audioCtx.destination);
-oscillator.start();
-*/
-
-/*
-let button = document.querySelector("#music1");
-button.addEventListener('mouseup', (e) => {
-  let log = document.querySelector('#log');
-  switch (e.button) {
-    case 0:
-      beep(50,300,200);
-      break;
-    case 1:
-      log.textContent = 'Middle button clicked.';
-      break;
-    case 2:
-      log.textContent = 'Right button clicked.';
-      break;
-    default:
-      log.textContent = `Unknown button code: ${e.button}`;
-  }
-});
-*/
-
 
 window.addEventListener("keydown", (event) => {
   if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
   }
-  //verify if it is time to reattribute the notes, version 2.0
-  if((y > firstHalfEnd2) && !timeTest) {
-    timeTest = true;
-  }
-
-  /*
-  //verify if it is time to reattribute the notes
-  if((event.timeStamp - timeStart) > firstHalfEnd && !timeTest) {
-  }
-  */
 
   switch (event.key) {
     
@@ -500,7 +426,7 @@ window.addEventListener("keydown", (event) => {
       // Do something for "esc" key press.
       break;
     case "q":
-      console.log(speedFactor);
+      console.log(speedFactor); //debuggin purposes
         break;
     default:
       return; // Quit when this doesn't handle the key event.
@@ -519,18 +445,12 @@ window.addEventListener("keydown", (event) => {
 console.log(ctx.getImageData(315, 850, 1, 1).data);
 
 
-
-
-
-
-
 console.log("projectO2 carregado com sucesso");
 
 //coisas que melhorariam esse programa:
 
   // ----> REFATORAR O CÓDIGO:
-    //tirar o lixo do código (codigos comentados, guardar somente de backup num novo arquivo OLD, deixar esse aqui como o original)
-    //tirar o lixo do código (códigos que não são úteis)
+
     //redefinir o nome de algumas coisas e/ou criar nome para o que não tem
     //comentar o que cada parte do código faz, do início ao fim
     //criar funções
@@ -555,7 +475,8 @@ console.log("projectO2 carregado com sucesso");
   //fazer o user poder trocar o timbre do oscillator
   //fazer uma música com timbre de piano real, e uma tecla tocar um acorde (mais que uma nota)
     //talvez fazer também que uma tecla toca um pequeno trechinho
-  //fazer ajuste de dificuldade (mudando o range, tipo o que fiz com a velocidade)
+
+
   //corrigir o sistema de dificuldades:
     //o range e o rangeP estão mal feitos, quanto maior um mais dificil, mas com o outro é o contrário
     //mudar isso e mudar como eu atribuo e reatribuo esses valores
@@ -570,7 +491,16 @@ console.log("projectO2 carregado com sucesso");
   //fazer um sistema de pontos: perfect, good e miss
   //ajuste de velocidade da música pelo user
   //não precisei mais trocar timeStamp para date.now (estou usando os pixels percorridos)
+  //fazer ajuste de dificuldade (mudando o range, tipo o que fiz com a velocidade)
 
-//Novidades deste commit:
+  //tirar o lixo do código (codigos comentados, guardar somente de backup num novo arquivo OLD, deixar esse aqui como o original)
+  //tirar o lixo do código (códigos que não são úteis)
+
+
+//Last commit:
   //Scoreboard
   //User can change difficulty (but it is bugged)
+  
+//Novidades deste commit:
+  //clean some not used old code
+  //change variable names
