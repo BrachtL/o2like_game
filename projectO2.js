@@ -48,40 +48,58 @@
 let gameWindow = document.querySelector(".gameWindow");
 let x0 = 200;
 let y0 = 0;
-let width = gameWindow.width = 915 + x0;
+let width = 915; //black background width
+let height = 915; //black bakground height
+
+gameWindow.width = width + x0; //game window has a white vertical rectangle aside to the left
+gameWindow.height = height + y0;
+
 //let width = canvas.width = window.innerWidth;
-let height = gameWindow.height = 915 + y0;
 //let height = canvas.height = window.innerHeight;
 let ctx = gameWindow.getContext("2d");
 
 
 ctx.fillStyle = "rgb(0, 0, 0)";
-ctx.fillRect(x0, y0, 915, 915);
+ctx.fillRect(x0, y0, width, height);
 //fillRect(x0, y0, width, height);
 
 
 //7 keys inicialization
 ctx.fillStyle = "rgb(255, 0, 0)";
 
-//red keys
-ctx.fillRect(x0+115, y0+850, 70, 15);
-ctx.fillRect(x0+115+100, y0+850, 70, 15);
-ctx.fillRect(x0+115+2*100, y0+850, 70, 15);
+let gapKeysX0 = 100; //distance between x0 (start horizontal point) of the neighbor keys
+let x0KeyS = x0 + 115;
+let x0KeyD = x0KeyS + gapKeysX0;
+let x0KeyF = x0KeyD + gapKeysX0;
+let x0KeySpaceBar = x0KeyF + gapKeysX0;
+let x0KeyJ = x0KeySpaceBar + gapKeysX0;
+let x0KeyK = x0KeyJ + gapKeysX0;
+let x0KeyL = x0KeyK + gapKeysX0;
 
-ctx.fillRect(x0+115+4*100, y0+850, 70, 15);
-ctx.fillRect(x0+115+5*100, y0+850, 70, 15);
-ctx.fillRect(x0+115+6*100, y0+850, 70, 15);
+let y0Key = y0 + 850;
+
+let keyWidth = 70;
+let keyHeight = 15
+
+//red keys
+ctx.fillRect(x0KeyS, y0Key, keyWidth, keyHeight);
+ctx.fillRect(x0KeyD, y0Key, keyWidth, keyHeight);
+ctx.fillRect(x0KeyF, y0Key, keyWidth, keyHeight);
+
+ctx.fillRect(x0KeyJ, y0Key, keyWidth, keyHeight);
+ctx.fillRect(x0KeyK, y0Key, keyWidth, keyHeight);
+ctx.fillRect(x0KeyL, y0Key, keyWidth, keyHeight);
 
 //blue key
 ctx.fillStyle = "rgb(0, 0, 255)"
-ctx.fillRect(x0+115+3*100, y0+850, 70, 15);
+ctx.fillRect(x0KeySpaceBar, y0Key, keyWidth, keyHeight);
 
 
 let y = 0; //musicTracer (y axis position)
 let sm = 256; //quarter note (seminima)
 
 let speedInput = document.getElementById("speed");
-let speedFactor = 0; // -2.0 to +2.0, step: 0.4 (HTML)
+let speedFactor = 0; // -2.5 to +2.5, step: 0.5 (HTML)
 let musicSpeed;
 musicSpeed = 4 + speedFactor;
 //let firstHalfEnd = 1.14586 * 7 * 12812 / musicSpeed;
@@ -108,7 +126,6 @@ let ranges = {
 }
 
 console.log(`range P: ${ranges.perfect}\nrange G: ${ranges.good}\ntype ${typeof(ranges.good)}`);
-
 
 
 let perfect = 0, good = 0, miss = 0;
@@ -157,7 +174,8 @@ function enableButtons() {
 }
 
 
-let tileHeight = 15;
+let tileHeight = keyHeight;
+let tileWidth = keyWidth;
 
 function draw1() {  
   // musicSpeed = 3 + 1*speedFactor; //bug do JS? se não colocar o 1 atrás não funciona!
@@ -165,89 +183,89 @@ function draw1() {
   ctx.beginPath();
 
   //S (note C4)
-  ctx.rect(x0+115, y, 70,tileHeight);
-  ctx.rect(x0+115, y-10*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-12*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-30*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-34*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-36*sm, 70,tileHeight);
+  ctx.rect(x0+115, y, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-10*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-12*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-30*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-34*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-36*sm, tileWidth, tileHeight);
   //D (note D4)
-  ctx.rect(x0+115+100, y-9*sm, 70,tileHeight);
-  ctx.rect(x0+115+100, y-31*sm, 70,tileHeight);
-  ctx.rect(x0+115+100, y-33.5*sm, 70,tileHeight);
+  ctx.rect(x0+115+100, y-9*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-31*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-33.5*sm, tileWidth, tileHeight);
   //F (note F4)
-  ctx.rect(x0+115+2*100, y-1*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-3.5*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-7*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-13*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-15.5*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-28*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-32.5*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-33*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-37*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-39.5*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-43*sm, 70,tileHeight);
+  ctx.rect(x0+115+2*100, y-1*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-3.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-7*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-13*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-15.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-28*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-32.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-33*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-37*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-39.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-43*sm, tileWidth, tileHeight);
   //space (note G4)
-  ctx.rect(x0+115+3*100, y-6*sm, 70,tileHeight);
-  ctx.rect(x0+115+3*100, y-18*sm, 70,tileHeight);
-  ctx.rect(x0+115+3*100, y-42*sm, 70,tileHeight);
+  ctx.rect(x0+115+3*100, y-6*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-18*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-42*sm, tileWidth, tileHeight);
   //J (note A4)
-  ctx.rect(x0+115+4*100, y-3*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-4*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-15*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-16*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-24*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-26.5*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-27.5*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-39*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-40*sm, 70,tileHeight);
+  ctx.rect(x0+115+4*100, y-3*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-4*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-15*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-16*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-24*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-26.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-27.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-39*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-40*sm, tileWidth, tileHeight);
   //K (note C5)
-  ctx.rect(x0+115+5*100, y-19*sm, 70,tileHeight);
-  ctx.rect(x0+115+5*100, y-25*sm, 70,tileHeight);
-  ctx.rect(x0+115+5*100, y-27*sm, 70,tileHeight);
+  ctx.rect(x0+115+5*100, y-19*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-25*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-27*sm, tileWidth, tileHeight);
 
   //copiando a música inteira para fazer uma oitava acima
   //S (note C5)
-  ctx.rect(x0+115, y-51*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-10*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-12*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-30*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-34*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115, y-36*sm-51*sm, 70,tileHeight);
+  ctx.rect(x0+115, y-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-10*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-12*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-30*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-34*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-36*sm-51*sm, tileWidth, tileHeight);
   //D (note D5)
-  ctx.rect(x0+115+100, y-9*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+100, y-31*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+100, y-33.5*sm-51*sm, 70,tileHeight);
+  ctx.rect(x0+115+100, y-9*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-31*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-33.5*sm-51*sm, tileWidth, tileHeight);
   //F (note F5)
-  ctx.rect(x0+115+2*100, y-1*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-3.5*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-7*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-13*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-15.5*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-28*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-32.5*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-33*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-37*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-39.5*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+2*100, y-43*sm-51*sm, 70,tileHeight);
+  ctx.rect(x0+115+2*100, y-1*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-3.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-7*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-13*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-15.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-28*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-32.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-33*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-37*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-39.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-43*sm-51*sm, tileWidth, tileHeight);
   //space (note G5)
-  ctx.rect(x0+115+3*100, y-6*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+3*100, y-18*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+3*100, y-42*sm-51*sm, 70,tileHeight);
+  ctx.rect(x0+115+3*100, y-6*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-18*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-42*sm-51*sm, tileWidth, tileHeight);
   //J (note A5)
-  ctx.rect(x0+115+4*100, y-3*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-4*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-15*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-16*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-24*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-26.5*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-27.5*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-39*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+4*100, y-40*sm-51*sm, 70,tileHeight);
+  ctx.rect(x0+115+4*100, y-3*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-4*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-15*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-16*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-24*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-26.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-27.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-39*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-40*sm-51*sm, tileWidth, tileHeight);
   //K (note C6)
-  ctx.rect(x0+115+5*100, y-19*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+5*100, y-25*sm-51*sm, 70,tileHeight);
-  ctx.rect(x0+115+5*100, y-27*sm-51*sm, 70,tileHeight);
+  ctx.rect(x0+115+5*100, y-19*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-25*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-27*sm-51*sm, tileWidth, tileHeight);
 
 
 
@@ -259,16 +277,16 @@ function draw1() {
   ctx.fillRect(x0, y0, 915, 915);
 
   ctx.fillStyle = "rgb(255, 0, 0)";
-  ctx.fillRect(x0+115, y0+850, 70,tileHeight);
-  ctx.fillRect(x0+115+100, y0+850, 70,tileHeight);
-  ctx.fillRect(x0+115+2*100, y0+850, 70,tileHeight);
+  ctx.fillRect(x0+115, y0Key, tileWidth, tileHeight);
+  ctx.fillRect(x0+115+100, y0Key, tileWidth, tileHeight);
+  ctx.fillRect(x0+115+2*100, y0Key, tileWidth, tileHeight);
 
-  ctx.fillRect(x0+115+4*100, y0+850, 70,tileHeight);
-  ctx.fillRect(x0+115+5*100, y0+850, 70,tileHeight);
-  ctx.fillRect(x0+115+6*100, y0+850, 70,tileHeight);
+  ctx.fillRect(x0+115+4*100, y0Key, tileWidth, tileHeight);
+  ctx.fillRect(x0+115+5*100, y0Key, tileWidth, tileHeight);
+  ctx.fillRect(x0+115+6*100, y0Key, tileWidth, tileHeight);
 
   ctx.fillStyle = "rgb(0, 0, 255)"
-  ctx.fillRect(x0+115+3*100, y0+850, 70,tileHeight);
+  ctx.fillRect(x0+115+3*100, y0Key, tileWidth, tileHeight);
   //ctx.fillRect(x0, 0, 100, 100);
 
   //tile color
@@ -351,7 +369,7 @@ window.addEventListener("keydown", (event) => {
       //console.log(event.timeStamp)
       
       let isPerfectOrGoodKeyS = false;
-      for(k=y0+850-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
         if(ctx.getImageData(x0+115, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
@@ -378,7 +396,7 @@ window.addEventListener("keydown", (event) => {
       } else {beep(10, 2*293.66, 200)}
 
       let isPerfectOrGoodKeyD = false;
-      for(k=y0+850-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
         if(ctx.getImageData(x0+115+100, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
@@ -404,7 +422,7 @@ window.addEventListener("keydown", (event) => {
       } else {beep(10, 2*349.23, 200)}
 
       let isPerfectOrGoodKeyF = false;
-      for(k=y0+850-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
         if(ctx.getImageData(x0+115+200, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
@@ -430,7 +448,7 @@ window.addEventListener("keydown", (event) => {
       } else {beep(10, 2*392, 200)}
 
       let isPerfectOrGoodKeySpace = false;
-      for(k=y0+850-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
         if(ctx.getImageData(x0+115+300, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
@@ -456,7 +474,7 @@ window.addEventListener("keydown", (event) => {
       } else {beep(10, 2*440, 200)}
 
       let isPerfectOrGoodKeyJ = false;
-      for(k=y0+850-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
         if(ctx.getImageData(x0+115+400, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
@@ -482,7 +500,7 @@ window.addEventListener("keydown", (event) => {
       } else {beep(10, 2*523.25, 200)}
 
       let isPerfectOrGoodKeyK = false;
-      for(k=y0+850-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
         if(ctx.getImageData(x0+115+500, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
@@ -515,7 +533,7 @@ window.addEventListener("keydown", (event) => {
       // Do something for "esc" key press.
       break;
     case "q":
-      console.log(speedFactor); //debuggin purposes
+      console.log("speedFactor: ", speedFactor); //debuggin purposes
         break;
     default:
       return; // Quit when this doesn't handle the key event.
@@ -525,7 +543,7 @@ window.addEventListener("keydown", (event) => {
   document.getElementById("good").textContent = `Good: ${good}`;
   document.getElementById("miss").textContent = `Miss: ${miss}`;
 
-  console.log(ranges.good + " " + ranges.perfect);
+  console.log("ranges.good: ", ranges.good + " " + "ranges.perfect: ", ranges.perfect);
 
   // Cancel the default action to avoid it being handled twice
   event.preventDefault();
@@ -537,19 +555,18 @@ console.log(ctx.getImageData(315, 850, 1, 1).data);
 console.log("projectO2 carregado com sucesso");
 
 //coisas que melhorariam esse programa:
-
-  //NEXT STEP -> substituir o primeiro if de cada keydown por 2 while que avança tileHeight-1 em pixels pra testar se o tile está por ali
-              //tem que ser 2 porque tem o antes e o depois. Substituir também o segundo if, usando a mesma lógica
-  //Depois disso, testar se os valores que coloquei na dificuldade estão bons e calibrá-los
-    
+ 
 
   // ----> REFATORAR O CÓDIGO:
+  // --> reference: https://levelup.gitconnected.com/javascript-best-practices-for-writing-more-robust-code-clean-code-f1730db3441d
 
     //redefinir o nome de algumas coisas e/ou criar nome para o que não tem
     //comentar o que cada parte do código faz, do início ao fim
     //criar funções
     //criar classes e objetos
     //analisar se o código está dentro dos paradigmas
+
+  // Next step -> estudar MIDI e testar (api, library)
     
 
   //estudar MIDI file e importar midi file para gerar uma música!
@@ -558,9 +575,6 @@ console.log("projectO2 carregado com sucesso");
   //soar a nota enquanto a tecla é apertada (e não por tempo)
   //fazer multiplayer
   //gravar highscore e só resetar se apertar no botão reset
-  //criar um novo arquivo, sem as coisas olds desse (tipo o firstHalfEnd e demais coisas comentadas)
-    //limpar esse novo código atribuindo variáveis (nomes) aos números (tipo o que fiz com a seminima)
-    //assim eu limpo o código, mas não perco coisas já feitas de outro jeito se quiser consultar
   
     //fazer um sistema de miss
       //mais fácil: completar com miss no final o que faltou de notas (total de notas - good - perfect = miss), se o cara só tem 3 miss e deveria ser 30, completar
@@ -569,12 +583,17 @@ console.log("projectO2 carregado com sucesso");
   //fazer o user poder trocar o timbre do oscillator
   //fazer uma música com timbre de piano real, e uma tecla tocar um acorde (mais que uma nota)
     //talvez fazer também que uma tecla toca um pequeno trechinho
+  //fazer um pwa (reconhecer quando é um smartphone e reconhecer toques na tela invés de teclas)
+  //fazer um efeito ao lado das teclas para indicar que foram apertadas e que houve perfect, good ou miss
+  //mostrar o SDF SpaceBar JKL em algum lugar
+
+    //bugs
+      //música quando tocada muito rápida apresenta bugs no score
+      //calibrar melhor as dificuldades (facilitar todas)
+      //por que se aperta as teclas muito rápido muitas vezes para de soar? mudar o método de tocar som
 
 
-  //corrigir o sistema de dificuldades:
-    //o range e o ranges.perfect estão mal feitos, quanto maior um mais dificil, mas com o outro é o contrário
-    //mudar isso e mudar como eu atribuo e reatribuo esses valores
-    //mudar os values no HTML
+
     
     
 //coisas feitas
@@ -586,16 +605,21 @@ console.log("projectO2 carregado com sucesso");
   //ajuste de velocidade da música pelo user
   //não precisei mais trocar timeStamp para date.now (estou usando os pixels percorridos)
   //fazer ajuste de dificuldade (mudando o range, tipo o que fiz com a velocidade)
+    //corrigir o sistema de dificuldades:
+    //o range e o ranges.perfect estão mal feitos, quanto maior um mais dificil, mas com o outro é o contrário
+    //mudar isso e mudar como eu atribuo e reatribuo esses valores
+    //mudar os values no HTML
 
   //tirar o lixo do código (codigos comentados, guardar somente de backup num novo arquivo OLD, deixar esse aqui como o original)
   //tirar o lixo do código (códigos que não são úteis)
 
 
+
+
 //Last commit:
-  //clean some not used old code
-  //change variable names
+  //tileHeight (one magic number removed)
+  //improve score assignment
   
 //Novidades deste commit:
-  //tileHeight (one magic number removed)
-  //improve score assignment 
+  //replace some magical numbers for variables: x0Keys, y0Keys, width, height, keyWidth, keyHeight, tileWidth
 
