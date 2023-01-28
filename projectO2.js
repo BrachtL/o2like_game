@@ -44,55 +44,105 @@
 
 */
 
+//constants
+const width = 915; //black background width
+const height = 915; //black bakground height
+
+const x0 = 200;
+const y0 = 0;
+
+const y0Key = y0 + 850;
+const keyWidth = 70;
+const keyHeight = 15;
+
+const tileHeight = keyHeight;
+const tileWidth = keyWidth;
+
+const gapKeysX0 = 100; //distance between x0 (start horizontal point) of the neighbor keys
+const x0KeyS = x0 + 115;
+const x0KeyD = x0KeyS + gapKeysX0;
+const x0KeyF = x0KeyD + gapKeysX0;
+const x0KeySpaceBar = x0KeyF + gapKeysX0;
+const x0KeyJ = x0KeySpaceBar + gapKeysX0;
+const x0KeyK = x0KeyJ + gapKeysX0;
+const x0KeyL = x0KeyK + gapKeysX0;
+
 //background game inicialization
 let gameWindow = document.querySelector(".gameWindow");
-let x0 = 200;
-let y0 = 0;
-let width = 915; //black background width
-let height = 915; //black bakground height
 
 gameWindow.width = width + x0; //game window has a white vertical rectangle aside to the left
 gameWindow.height = height + y0;
-
 //let width = canvas.width = window.innerWidth;
 //let height = canvas.height = window.innerHeight;
-let ctx = gameWindow.getContext("2d");
 
+let ctx = gameWindow.getContext("2d");
 
 ctx.fillStyle = "rgb(0, 0, 0)";
 ctx.fillRect(x0, y0, width, height);
-//fillRect(x0, y0, width, height);
 
 
-//7 keys inicialization
-ctx.fillStyle = "rgb(255, 0, 0)";
+class Tile {
+  constructor(color, x0Tile, y0Tile, tileWidth, tileHeight) {
+    this.color = color,
+    this.x0Tile = x0Tile,
+    this.y0Tile = y0Tile,
+    this.tileWidth = tileWidth,
+    this.tileHeight = tileHeight
+  }
+}
 
-let gapKeysX0 = 100; //distance between x0 (start horizontal point) of the neighbor keys
-let x0KeyS = x0 + 115;
-let x0KeyD = x0KeyS + gapKeysX0;
-let x0KeyF = x0KeyD + gapKeysX0;
-let x0KeySpaceBar = x0KeyF + gapKeysX0;
-let x0KeyJ = x0KeySpaceBar + gapKeysX0;
-let x0KeyK = x0KeyJ + gapKeysX0;
-let x0KeyL = x0KeyK + gapKeysX0;
+//array of keys: SDF spacebar JKL
+const keysArray = [
+                    new Tile("rgb(255, 0, 0)", x0KeyS, y0Key, keyWidth, keyHeight),
+                    new Tile("rgb(255, 0, 0)", x0KeyD, y0Key, keyWidth, keyHeight),
+                    new Tile("rgb(255, 0, 0)", x0KeyF, y0Key, keyWidth, keyHeight),
+                    new Tile("rgb(0, 0, 255)", x0KeySpaceBar, y0Key, keyWidth, keyHeight),
+                    new Tile("rgb(255, 0, 0)", x0KeyJ, y0Key, keyWidth, keyHeight),
+                    new Tile("rgb(255, 0, 0)", x0KeyK, y0Key, keyWidth, keyHeight),
+                    new Tile("rgb(255, 0, 0)", x0KeyL, y0Key, keyWidth, keyHeight)
+                  ]
 
-let y0Key = y0 + 850;
 
-let keyWidth = 70;
-let keyHeight = 15
+function drawTiles(tilesObjectArray) {
+  for(i = 0; i < tilesObjectArray.length; i++) {
+    ctx.fillStyle = tilesObjectArray[i].color;
+    ctx.fillRect(tilesObjectArray[i].x0Tile, tilesObjectArray[i].y0Tile, tilesObjectArray[i].tileWidth, tilesObjectArray[i].tileHeight);
+  }
+}
 
-//red keys
-ctx.fillRect(x0KeyS, y0Key, keyWidth, keyHeight);
-ctx.fillRect(x0KeyD, y0Key, keyWidth, keyHeight);
-ctx.fillRect(x0KeyF, y0Key, keyWidth, keyHeight);
+drawTiles(keysArray);
 
-ctx.fillRect(x0KeyJ, y0Key, keyWidth, keyHeight);
-ctx.fillRect(x0KeyK, y0Key, keyWidth, keyHeight);
-ctx.fillRect(x0KeyL, y0Key, keyWidth, keyHeight);
+/* 
+//backup function
+function draw7Keys() {
+  //7 keys inicialization
+  ctx.fillStyle = "rgb(255, 0, 0)";
 
-//blue key
-ctx.fillStyle = "rgb(0, 0, 255)"
-ctx.fillRect(x0KeySpaceBar, y0Key, keyWidth, keyHeight);
+  let gapKeysX0 = 100; //distance between x0 (start horizontal point) of the neighbor keys
+  let x0KeyS = x0 + 115;
+  let x0KeyD = x0KeyS + gapKeysX0;
+  let x0KeyF = x0KeyD + gapKeysX0;
+  let x0KeySpaceBar = x0KeyF + gapKeysX0;
+  let x0KeyJ = x0KeySpaceBar + gapKeysX0;
+  let x0KeyK = x0KeyJ + gapKeysX0;
+  let x0KeyL = x0KeyK + gapKeysX0;
+
+  //red keys
+  ctx.fillRect(x0KeyS, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyD, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyF, y0Key, keyWidth, keyHeight);
+
+  ctx.fillRect(x0KeyJ, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyK, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyL, y0Key, keyWidth, keyHeight);
+
+  //blue key
+  ctx.fillStyle = "rgb(0, 0, 255)"
+  ctx.fillRect(x0KeySpaceBar, y0Key, keyWidth, keyHeight);
+}
+*/
+//draw7Keys();
+
 
 
 let y = 0; //musicTracer (y axis position)
@@ -174,8 +224,8 @@ function enableButtons() {
 }
 
 
-let tileHeight = keyHeight;
-let tileWidth = keyWidth;
+
+
 
 function draw1() {  
   // musicSpeed = 3 + 1*speedFactor; //bug do JS? se não colocar o 1 atrás não funciona!
@@ -268,26 +318,14 @@ function draw1() {
   ctx.rect(x0+115+5*100, y-27*sm-51*sm, tileWidth, tileHeight);
 
 
-
   //clearing the moving trace
   ctx.clearRect(0, 0, width, height);
 
-  //repainting the static things (background and 7 keys)
+  //repainting background
   ctx.fillStyle = "rgb(0, 0, 0)";
   ctx.fillRect(x0, y0, 915, 915);
 
-  ctx.fillStyle = "rgb(255, 0, 0)";
-  ctx.fillRect(x0+115, y0Key, tileWidth, tileHeight);
-  ctx.fillRect(x0+115+100, y0Key, tileWidth, tileHeight);
-  ctx.fillRect(x0+115+2*100, y0Key, tileWidth, tileHeight);
-
-  ctx.fillRect(x0+115+4*100, y0Key, tileWidth, tileHeight);
-  ctx.fillRect(x0+115+5*100, y0Key, tileWidth, tileHeight);
-  ctx.fillRect(x0+115+6*100, y0Key, tileWidth, tileHeight);
-
-  ctx.fillStyle = "rgb(0, 0, 255)"
-  ctx.fillRect(x0+115+3*100, y0Key, tileWidth, tileHeight);
-  //ctx.fillRect(x0, 0, 100, 100);
+  drawTiles(keysArray);
 
   //tile color
   ctx.fillStyle = "rgb(170, 170, 170)";
@@ -617,9 +655,7 @@ console.log("projectO2 carregado com sucesso");
 
 
 //Last commit:
-  //tileHeight (one magic number removed)
-  //improve score assignment
+  //replace some magical numbers for variables: x0Keys, y0Keys, width, height, keyWidth, keyHeight, tileWidth
   
 //Novidades deste commit:
-  //replace some magical numbers for variables: x0Keys, y0Keys, width, height, keyWidth, keyHeight, tileWidth
-
+  //create class Tile, function drawTiles, and change some let to const, cleaning up the code
