@@ -81,67 +81,45 @@ ctx.fillStyle = "rgb(0, 0, 0)";
 ctx.fillRect(x0, y0, width, height);
 
 
-class Tile {
-  constructor(color, x0Tile, y0Tile, tileWidth, tileHeight) {
+class Key {
+  constructor(color, x0Key, y0Key, keyWidth, keyHeight) {
     this.color = color,
-    this.x0Tile = x0Tile,
-    this.y0Tile = y0Tile,
-    this.tileWidth = tileWidth,
-    this.tileHeight = tileHeight
+    this.x0 = x0Key,
+    this.y0 = y0Key,
+    this.width = keyWidth,
+    this.height = keyHeight
   }
 }
 
-//array of keys: SDF spacebar JKL
+class Tile {
+  constructor(color, x0Tile, yTile, tileWidth, tileHeight) {
+    this.color = color,
+    this.x0 = x0Tile,
+    this.y = yTile,
+    this.width = tileWidth,
+    this.height = tileHeight
+  }
+}
+
+//array of keys: SDF SpaceBar JKL
 const keysArray = [
-                    new Tile("rgb(255, 0, 0)", x0KeyS, y0Key, keyWidth, keyHeight),
-                    new Tile("rgb(255, 0, 0)", x0KeyD, y0Key, keyWidth, keyHeight),
-                    new Tile("rgb(255, 0, 0)", x0KeyF, y0Key, keyWidth, keyHeight),
-                    new Tile("rgb(0, 0, 255)", x0KeySpaceBar, y0Key, keyWidth, keyHeight),
-                    new Tile("rgb(255, 0, 0)", x0KeyJ, y0Key, keyWidth, keyHeight),
-                    new Tile("rgb(255, 0, 0)", x0KeyK, y0Key, keyWidth, keyHeight),
-                    new Tile("rgb(255, 0, 0)", x0KeyL, y0Key, keyWidth, keyHeight)
-                  ]
+  new Key("rgb(255, 0, 0)", x0KeyS, y0Key, keyWidth, keyHeight),
+  new Key("rgb(255, 0, 0)", x0KeyD, y0Key, keyWidth, keyHeight),
+  new Key("rgb(255, 0, 0)", x0KeyF, y0Key, keyWidth, keyHeight),
+  new Key("rgb(0, 0, 255)", x0KeySpaceBar, y0Key, keyWidth, keyHeight),
+  new Key("rgb(255, 0, 0)", x0KeyJ, y0Key, keyWidth, keyHeight),
+  new Key("rgb(255, 0, 0)", x0KeyK, y0Key, keyWidth, keyHeight),
+  new Key("rgb(255, 0, 0)", x0KeyL, y0Key, keyWidth, keyHeight)
+];
 
-
-function drawTiles(tilesObjectArray) {
+function drawTilesAndKeys(tilesObjectArray) {
   for(i = 0; i < tilesObjectArray.length; i++) {
     ctx.fillStyle = tilesObjectArray[i].color;
-    ctx.fillRect(tilesObjectArray[i].x0Tile, tilesObjectArray[i].y0Tile, tilesObjectArray[i].tileWidth, tilesObjectArray[i].tileHeight);
+    ctx.fillRect(tilesObjectArray[i].x0, tilesObjectArray[i].y0, tilesObjectArray[i].width, tilesObjectArray[i].height);
   }
 }
 
-drawTiles(keysArray);
-
-/* 
-//backup function
-function draw7Keys() {
-  //7 keys inicialization
-  ctx.fillStyle = "rgb(255, 0, 0)";
-
-  let gapKeysX0 = 100; //distance between x0 (start horizontal point) of the neighbor keys
-  let x0KeyS = x0 + 115;
-  let x0KeyD = x0KeyS + gapKeysX0;
-  let x0KeyF = x0KeyD + gapKeysX0;
-  let x0KeySpaceBar = x0KeyF + gapKeysX0;
-  let x0KeyJ = x0KeySpaceBar + gapKeysX0;
-  let x0KeyK = x0KeyJ + gapKeysX0;
-  let x0KeyL = x0KeyK + gapKeysX0;
-
-  //red keys
-  ctx.fillRect(x0KeyS, y0Key, keyWidth, keyHeight);
-  ctx.fillRect(x0KeyD, y0Key, keyWidth, keyHeight);
-  ctx.fillRect(x0KeyF, y0Key, keyWidth, keyHeight);
-
-  ctx.fillRect(x0KeyJ, y0Key, keyWidth, keyHeight);
-  ctx.fillRect(x0KeyK, y0Key, keyWidth, keyHeight);
-  ctx.fillRect(x0KeyL, y0Key, keyWidth, keyHeight);
-
-  //blue key
-  ctx.fillStyle = "rgb(0, 0, 255)"
-  ctx.fillRect(x0KeySpaceBar, y0Key, keyWidth, keyHeight);
-}
-*/
-//draw7Keys();
+drawTilesAndKeys(keysArray);
 
 
 
@@ -226,106 +204,206 @@ function enableButtons() {
 
 
 
+//this is the vertical position of each note
+let music1TilesY = {
+  keyS: [y, y-10*sm, y-12*sm, y-30*sm, y-34*sm, y-36*sm, y-51*sm, y-10*sm-51*sm, y-12*sm-51*sm, y-30*sm-51*sm, y-34*sm-51*sm, y-36*sm-51*sm],
+  keyD: [y-9*sm, y-31*sm, y-33.5*sm, y-9*sm-51*sm, y-31*sm-51*sm, y-33.5*sm-51*sm],
+  keyF: [y-1*sm, y-3.5*sm, y-7*sm, y-13*sm, y-15.5*sm, y-28*sm, y-32.5*sm, y-33*sm, y-37*sm, y-39.5*sm, y-43*sm, y-1*sm-51*sm, y-3.5*sm-51*sm, y-7*sm-51*sm, y-13*sm-51*sm, y-15.5*sm-51*sm, y-28*sm-51*sm, y-32.5*sm-51*sm, y-33*sm-51*sm, y-37*sm-51*sm, y-39.5*sm-51*sm, y-43*sm-51*sm],
+  keySpaceBar: [y-6*sm, y-18*sm, y-42*sm, y-6*sm-51*sm, y-18*sm-51*sm, y-42*sm-51*sm],
+  keyJ: [y-3*sm, y-4*sm, y-15*sm, y-16*sm, y-24*sm, y-26.5*sm, y-27.5*sm, y-39*sm, y-40*sm, y-3*sm-51*sm, y-4*sm-51*sm, y-15*sm-51*sm, y-16*sm-51*sm, y-24*sm-51*sm, y-26.5*sm-51*sm, y-27.5*sm-51*sm, y-39*sm-51*sm, y-40*sm-51*sm],
+  keyK: [y-19*sm, y-25*sm, y-27*sm, y-19*sm-51*sm, y-25*sm-51*sm, y-27*sm-51*sm]
+}
 
+
+
+//arrays to store the index of music1TIles to draw
+let screenNotesKeyS = [];
+let screenNotesKeyD = [];
+let screenNotesKeyF = [];
+let screenNotesKeySpaceBar = [];
+let screenNotesKeyJ = [];
+let screenNotesKeyK = [];
+
+//não estou usando essa função ainda
+function drawTiles(screenNotes, y, tileColor, x0Tile, tileWidth, tileHeight) {
+  for(i = 0; i < screenNotes.length; i++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(x0Tile, screenNotes[i], tileWidth, tileHeight);
+  }
+}
+
+function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexOfEachScreenNotes, tileColor, keysArray, tileWidth, tileHeight) {
+  
+  objectOfArraysOfKeys = {
+    keyS: [y, y-10*sm, y-12*sm, y-30*sm, y-34*sm, y-36*sm, y-51*sm, y-10*sm-51*sm, y-12*sm-51*sm, y-30*sm-51*sm, y-34*sm-51*sm, y-36*sm-51*sm],
+    keyD: [y-9*sm, y-31*sm, y-33.5*sm, y-9*sm-51*sm, y-31*sm-51*sm, y-33.5*sm-51*sm],
+    keyF: [y-1*sm, y-3.5*sm, y-7*sm, y-13*sm, y-15.5*sm, y-28*sm, y-32.5*sm, y-33*sm, y-37*sm, y-39.5*sm, y-43*sm, y-1*sm-51*sm, y-3.5*sm-51*sm, y-7*sm-51*sm, y-13*sm-51*sm, y-15.5*sm-51*sm, y-28*sm-51*sm, y-32.5*sm-51*sm, y-33*sm-51*sm, y-37*sm-51*sm, y-39.5*sm-51*sm, y-43*sm-51*sm],
+    keySpaceBar: [y-6*sm, y-18*sm, y-42*sm, y-6*sm-51*sm, y-18*sm-51*sm, y-42*sm-51*sm],
+    keyJ: [y-3*sm, y-4*sm, y-15*sm, y-16*sm, y-24*sm, y-26.5*sm, y-27.5*sm, y-39*sm, y-40*sm, y-3*sm-51*sm, y-4*sm-51*sm, y-15*sm-51*sm, y-16*sm-51*sm, y-24*sm-51*sm, y-26.5*sm-51*sm, y-27.5*sm-51*sm, y-39*sm-51*sm, y-40*sm-51*sm],
+    keyK: [y-19*sm, y-25*sm, y-27*sm, y-19*sm-51*sm, y-25*sm-51*sm, y-27*sm-51*sm]
+  }
+ 
+  //this part search for notes that already passed the screen and don't need to be printed anymore
+  for(j = 0; j < screenNotesKeyS.length; j++) { 
+    if(objectOfArraysOfKeys.keyS[screenNotesKeyS[j]] > height + 100) {     
+      //console.log("Estou aqui Remove notas ", j, screenNotesKeyS[j], objectOfArraysOfKeys.keyS[screenNotesKeyS[j]]);
+      //delete screenNotesKeyS[j];
+      //console.log(screenNotesKeyS);
+      screenNotesKeyS.shift(); 
+      
+    }
+  }
+
+  for(j = 0; j < screenNotesKeyD.length; j++) {
+    if(objectOfArraysOfKeys.keyD[screenNotesKeyD[j]] > height + 100) {
+      screenNotesKeyD.shift(); 
+    }
+  }
+
+  for(j = 0; j < screenNotesKeyF.length; j++) {
+    if(objectOfArraysOfKeys.keyF[screenNotesKeyF[j]] > height + 100) {
+      screenNotesKeyF.shift(); 
+    }
+  }
+
+  for(j = 0; j < screenNotesKeySpaceBar.length; j++) {
+    if(objectOfArraysOfKeys.keySpaceBar[screenNotesKeySpaceBar[j]] > height + 100) {
+      screenNotesKeySpaceBar.shift(); 
+    }
+  }
+
+  for(j = 0; j < screenNotesKeyJ.length; j++) {
+    if(objectOfArraysOfKeys.keyJ[screenNotesKeyJ[j]] > height + 100) {
+      screenNotesKeyJ.shift(); 
+    }
+  }
+
+  for(j = 0; j < screenNotesKeyK.length; j++) {
+    if(objectOfArraysOfKeys.keyK[screenNotesKeyK[j]] > height + 100) {
+      screenNotesKeyK.shift(); 
+    }
+  }
+
+ 
+  //this part add the notes that are coming close to the game window
+  //console.log("Estive aqui", lastIndexOfEachScreenNotes.keyS, objectOfArraysOfKeys.keyS.length, objectOfArraysOfKeys.keyS[1]);
+  for(i = lastIndexOfEachScreenNotes.keyS; i < objectOfArraysOfKeys.keyS.length; i++) {
+    if(objectOfArraysOfKeys.keyS[i] < height + 100 && objectOfArraysOfKeys.keyS[i] > y0 - 100) {
+      screenNotesKeyS.push(i);
+      //console.log("Estive aqui: ", screenNotesKeyS);
+    } else {break}
+  }
+  lastIndexOfEachScreenNotes.keyS = i;
+  //console.log("Estive aqui: ", screenNotesKeyS, objectOfArraysOfKeys.keyS[screenNotesKeyS[1]]);
+
+
+  for(i = lastIndexOfEachScreenNotes.keyD; i < objectOfArraysOfKeys.keyD.length; i++) {
+    if(objectOfArraysOfKeys.keyD[i] < height + 100 && objectOfArraysOfKeys.keyD[i] > y0 - 100) {
+      screenNotesKeyD.push(i);
+    } else {break}
+  }
+  lastIndexOfEachScreenNotes.keyD = i;
+
+  for(i = lastIndexOfEachScreenNotes.keyF; i < objectOfArraysOfKeys.keyF.length; i++) {
+    if(objectOfArraysOfKeys.keyF[i] < height + 100 && objectOfArraysOfKeys.keyF[i] > y0 - 100) {
+      screenNotesKeyF.push(i);
+    } else {break}
+  }
+  lastIndexOfEachScreenNotes.keyF = i;
+
+  for(i = lastIndexOfEachScreenNotes.keySpaceBar; i < objectOfArraysOfKeys.keySpaceBar.length; i++) {
+    if(objectOfArraysOfKeys.keySpaceBar[i] < height + 100 && objectOfArraysOfKeys.keySpaceBar[i] > y0 - 100) {
+      screenNotesKeySpaceBar.push(i);
+    } else {break}
+  }
+  lastIndexOfEachScreenNotes.keySpaceBar = i;
+
+  for(i = lastIndexOfEachScreenNotes.keyJ; i < objectOfArraysOfKeys.keyJ.length; i++) {
+    if(objectOfArraysOfKeys.keyJ[i] < height + 100 && objectOfArraysOfKeys.keyJ[i] > y0 - 100) {
+      screenNotesKeyJ.push(i);
+    } else {break}
+  }
+  lastIndexOfEachScreenNotes.keyJ = i;
+
+  for(i = lastIndexOfEachScreenNotes.keyK; i < objectOfArraysOfKeys.keyK.length; i++) {
+    if(objectOfArraysOfKeys.keyK[i] < height + 100 && objectOfArraysOfKeys.keyK[i] > y0 - 100) {
+      screenNotesKeyK.push(i);
+    } else {break}
+  }
+  lastIndexOfEachScreenNotes.keyK = i;
+
+  
+  //this part draw the notes
+  for(k = 0; k < screenNotesKeyS.length; k++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(keysArray[0].x0, objectOfArraysOfKeys.keyS[screenNotesKeyS[k]], tileWidth, tileHeight);
+  }
+  //console.log(k);
+
+  for(k = 0; k < screenNotesKeyD.length; k++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(keysArray[1].x0, objectOfArraysOfKeys.keyD[screenNotesKeyD[k]], tileWidth, tileHeight);
+  } 
+
+
+  for(k = 0; k < screenNotesKeyF.length; k++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(keysArray[2].x0, objectOfArraysOfKeys.keyF[screenNotesKeyF[k]], tileWidth, tileHeight);
+  }
+
+  for(k = 0; k < screenNotesKeySpaceBar.length; k++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(keysArray[3].x0, objectOfArraysOfKeys.keySpaceBar[screenNotesKeySpaceBar[k]], tileWidth, tileHeight);
+  }
+
+  for(k = 0; k < screenNotesKeyJ.length; k++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(keysArray[4].x0, objectOfArraysOfKeys.keyJ[screenNotesKeyJ[k]], tileWidth, tileHeight);
+  }
+
+  for(k = 0; k < screenNotesKeyK.length; k++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(keysArray[5].x0, objectOfArraysOfKeys.keyK[screenNotesKeyK[k]], tileWidth, tileHeight);
+  }
+  
+  return lastIndexOfEachScreenNotes;
+  
+}
+
+
+let lastIndexOfEachScreenNotes = {
+  keyS: 0,
+  keyD: 0,
+  keyF: 0,
+  keySpaceBar: 0,
+  keyJ: 0,
+  keyK: 0
+  
+}
+
+
+let tileColor = "rgb(170, 170, 170)";
+//último ctrl + z
 function draw1() {  
   // musicSpeed = 3 + 1*speedFactor; //bug do JS? se não colocar o 1 atrás não funciona!
 
   ctx.beginPath();
 
-  //S (note C4)
-  ctx.rect(x0+115, y, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-10*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-12*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-30*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-34*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-36*sm, tileWidth, tileHeight);
-  //D (note D4)
-  ctx.rect(x0+115+100, y-9*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+100, y-31*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+100, y-33.5*sm, tileWidth, tileHeight);
-  //F (note F4)
-  ctx.rect(x0+115+2*100, y-1*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-3.5*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-7*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-13*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-15.5*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-28*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-32.5*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-33*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-37*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-39.5*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-43*sm, tileWidth, tileHeight);
-  //space (note G4)
-  ctx.rect(x0+115+3*100, y-6*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+3*100, y-18*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+3*100, y-42*sm, tileWidth, tileHeight);
-  //J (note A4)
-  ctx.rect(x0+115+4*100, y-3*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-4*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-15*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-16*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-24*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-26.5*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-27.5*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-39*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-40*sm, tileWidth, tileHeight);
-  //K (note C5)
-  ctx.rect(x0+115+5*100, y-19*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+5*100, y-25*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+5*100, y-27*sm, tileWidth, tileHeight);
+  //console.log("Estive aqui");
 
-  //copiando a música inteira para fazer uma oitava acima
-  //S (note C5)
-  ctx.rect(x0+115, y-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-10*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-12*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-30*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-34*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115, y-36*sm-51*sm, tileWidth, tileHeight);
-  //D (note D5)
-  ctx.rect(x0+115+100, y-9*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+100, y-31*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+100, y-33.5*sm-51*sm, tileWidth, tileHeight);
-  //F (note F5)
-  ctx.rect(x0+115+2*100, y-1*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-3.5*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-7*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-13*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-15.5*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-28*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-32.5*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-33*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-37*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-39.5*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+2*100, y-43*sm-51*sm, tileWidth, tileHeight);
-  //space (note G5)
-  ctx.rect(x0+115+3*100, y-6*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+3*100, y-18*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+3*100, y-42*sm-51*sm, tileWidth, tileHeight);
-  //J (note A5)
-  ctx.rect(x0+115+4*100, y-3*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-4*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-15*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-16*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-24*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-26.5*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-27.5*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-39*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+4*100, y-40*sm-51*sm, tileWidth, tileHeight);
-  //K (note C6)
-  ctx.rect(x0+115+5*100, y-19*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+5*100, y-25*sm-51*sm, tileWidth, tileHeight);
-  ctx.rect(x0+115+5*100, y-27*sm-51*sm, tileWidth, tileHeight);
-
+  //teste();
 
   //clearing the moving trace
   ctx.clearRect(0, 0, width, height);
+
 
   //repainting background
   ctx.fillStyle = "rgb(0, 0, 0)";
   ctx.fillRect(x0, y0, 915, 915);
 
-  drawTiles(keysArray);
+  drawTilesAndKeys(keysArray);
+  //teste();
+  lastIndexOfEachScreenNotes = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexOfEachScreenNotes, tileColor, keysArray, tileWidth, tileHeight);
 
   //tile color
   ctx.fillStyle = "rgb(170, 170, 170)";
@@ -336,6 +414,9 @@ function draw1() {
   y = y + musicSpeed; 
   
 }
+
+
+
 
 let isButtonMusic1Clicked = false;
 let interval1; //interval for music1
@@ -358,6 +439,15 @@ function music1Button() {
 
     document.getElementById("music1").textContent = "Stop music 1";
     miss = good = perfect = 0;
+    lastIndexOfEachScreenNotes = {
+      keyS: 0,
+      keyD: 0,
+      keyF: 0,
+      keySpaceBar: 0,
+      keyJ: 0,
+      keyK: 0
+      
+    }
     
     ranges = getDifficulty();
     console.log(`range P: ${ranges.perfect}\nrange G: ${ranges.good}`);
@@ -408,7 +498,7 @@ window.addEventListener("keydown", (event) => {
       
       let isPerfectOrGoodKeyS = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
-        if(ctx.getImageData(x0+115, k, 1, 1).data[0] == 170) {
+        if(ctx.getImageData(x0KeyS, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
             isPerfectOrGoodKeyS = true;
@@ -435,7 +525,7 @@ window.addEventListener("keydown", (event) => {
 
       let isPerfectOrGoodKeyD = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
-        if(ctx.getImageData(x0+115+100, k, 1, 1).data[0] == 170) {
+        if(ctx.getImageData(x0KeyD, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
             isPerfectOrGoodKeyD = true;
@@ -461,7 +551,7 @@ window.addEventListener("keydown", (event) => {
 
       let isPerfectOrGoodKeyF = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
-        if(ctx.getImageData(x0+115+200, k, 1, 1).data[0] == 170) {
+        if(ctx.getImageData(x0KeyF, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
             isPerfectOrGoodKeyF = true;
@@ -487,7 +577,7 @@ window.addEventListener("keydown", (event) => {
 
       let isPerfectOrGoodKeySpace = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
-        if(ctx.getImageData(x0+115+300, k, 1, 1).data[0] == 170) {
+        if(ctx.getImageData(x0KeySpaceBar, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
             isPerfectOrGoodKeySpace = true;
@@ -513,7 +603,7 @@ window.addEventListener("keydown", (event) => {
 
       let isPerfectOrGoodKeyJ = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
-        if(ctx.getImageData(x0+115+400, k, 1, 1).data[0] == 170) {
+        if(ctx.getImageData(x0KeyJ, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
             isPerfectOrGoodKeyJ = true;
@@ -539,7 +629,7 @@ window.addEventListener("keydown", (event) => {
 
       let isPerfectOrGoodKeyK = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
-        if(ctx.getImageData(x0+115+500, k, 1, 1).data[0] == 170) {
+        if(ctx.getImageData(x0KeyK, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
             isPerfectOrGoodKeyK = true;
@@ -624,6 +714,13 @@ console.log("projectO2 carregado com sucesso");
   //fazer um pwa (reconhecer quando é um smartphone e reconhecer toques na tela invés de teclas)
   //fazer um efeito ao lado das teclas para indicar que foram apertadas e que houve perfect, good ou miss
   //mostrar o SDF SpaceBar JKL em algum lugar
+  //fazer
+    //um array (ou object array) para todas as notas da música
+    //um buffer (que carrega toda a música)
+    //um screen (que armazena o que está na tela)
+    //função drawMusicTiles: buffer recebe o array da música e screen carrega o que está no buffer conforme vai saindo da tela
+      //Imprime screen 
+    //vantagem: evita fazer os fillRect para tiles que nem estão na tela (não chegaram ou já passaram) 
 
     //bugs
       //música quando tocada muito rápida apresenta bugs no score
@@ -655,7 +752,238 @@ console.log("projectO2 carregado com sucesso");
 
 
 //Last commit:
-  //replace some magical numbers for variables: x0Keys, y0Keys, width, height, keyWidth, keyHeight, tileWidth
+  //create class Tile, function drawTiles, and change some let to const, cleaning up the code
   
 //Novidades deste commit:
-  //create class Tile, function drawTiles, and change some let to const, cleaning up the code
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//Code used to clean up
+
+function getYPart(str) {
+  let indexOfAsterisk;
+  let i = 0;
+  let stringY = "";
+  while(str.indexOf("51*sm", i) != -1) {
+    indexOfAsterisk = str.indexOf("51*sm", i);
+    let j = indexOfAsterisk;
+    while (str[j-1] != "y") {
+      j--;
+    }
+    stringY += (str.substring(j-1, indexOfAsterisk + 5)) + ", " ;
+    i = indexOfAsterisk + 1;
+  }
+  console.log("Get y part: ", stringY)
+}
+
+str1 = `    ctx.rect(x0KeyS, y-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyS, y-10*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyS, y-12*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyS, y-30*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyS, y-34*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyS, y-36*sm-51*sm, tileWidth, tileHeight);`
+str2 = `
+ctx.rect(x0KeyD, y-9*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyD, y-31*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyD, y-33.5*sm-51*sm, tileWidth, tileHeight);
+`
+str3 = `
+ctx.rect(x0KeyF, y-1*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-3.5*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-7*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-13*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-15.5*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-28*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-32.5*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-33*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-37*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-39.5*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyF, y-43*sm-51*sm, tileWidth, tileHeight);
+`
+str4 = `
+ctx.rect(x0KeySpaceBar, y-6*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeySpaceBar, y-18*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeySpaceBar, y-42*sm-51*sm, tileWidth, tileHeight);
+`
+str5 = `
+ctx.rect(x0KeyJ, y-3*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-4*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-15*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-16*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-24*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-26.5*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-27.5*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-39*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyJ, y-40*sm-51*sm, tileWidth, tileHeight);
+`
+str6 = `
+ctx.rect(x0KeyK, y-19*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyK, y-25*sm-51*sm, tileWidth, tileHeight);
+ctx.rect(x0KeyK, y-27*sm-51*sm, tileWidth, tileHeight);
+`
+
+console.log("KeyS: ");
+getYPart(str1);
+str1 = [y-51*sm, y-10*sm-51*sm, y-12*sm-51*sm, y-30*sm-51*sm, y-34*sm-51*sm, y-36*sm-51*sm]
+console.log("qtd notas: ", str1.length)
+console.log("KeyD: ");
+getYPart(str2);
+str2 = [y-9*sm-51*sm, y-31*sm-51*sm, y-33.5*sm-51*sm]
+console.log("qtd notas: ", str2.length)
+console.log("KeyF: ");
+getYPart(str3);
+str3 = [y-1*sm-51*sm, y-3.5*sm-51*sm, y-7*sm-51*sm, y-13*sm-51*sm, y-15.5*sm-51*sm, y-28*sm-51*sm, y-32.5*sm-51*sm, y-33*sm-51*sm, y-37*sm-51*sm, y-39.5*sm-51*sm, y-43*sm-51*sm]
+console.log("qtd notas: ", str3.length)
+console.log("KeySpaceBar: ");
+getYPart(str4);
+str4 = [y-6*sm-51*sm, y-18*sm-51*sm, y-42*sm-51*sm]
+console.log("qtd notas: ", str4.length)
+console.log("KeyJ: ");
+getYPart(str5);
+str5 = [y-3*sm-51*sm, y-4*sm-51*sm, y-15*sm-51*sm, y-16*sm-51*sm, y-24*sm-51*sm, y-26.5*sm-51*sm, y-27.5*sm-51*sm, y-39*sm-51*sm, y-40*sm-51*sm]
+console.log("qtd notas: ", str5.length)
+console.log("KeyK: ");
+getYPart(str6);
+str6 = [y-19*sm-51*sm, y-25*sm-51*sm, y-27*sm-51*sm]
+console.log("qtd notas: ", str6.length)
+
+*/
+
+
+
+
+
+/* 
+//backup function
+function draw7Keys() {
+  //7 keys inicialization
+  ctx.fillStyle = "rgb(255, 0, 0)";
+
+  let gapKeysX0 = 100; //distance between x0 (start horizontal point) of the neighbor keys
+  let x0KeyS = x0 + 115;
+  let x0KeyD = x0KeyS + gapKeysX0;
+  let x0KeyF = x0KeyD + gapKeysX0;
+  let x0KeySpaceBar = x0KeyF + gapKeysX0;
+  let x0KeyJ = x0KeySpaceBar + gapKeysX0;
+  let x0KeyK = x0KeyJ + gapKeysX0;
+  let x0KeyL = x0KeyK + gapKeysX0;
+
+  //red keys
+  ctx.fillRect(x0KeyS, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyD, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyF, y0Key, keyWidth, keyHeight);
+
+  ctx.fillRect(x0KeyJ, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyK, y0Key, keyWidth, keyHeight);
+  ctx.fillRect(x0KeyL, y0Key, keyWidth, keyHeight);
+
+  //blue key
+  ctx.fillStyle = "rgb(0, 0, 255)"
+  ctx.fillRect(x0KeySpaceBar, y0Key, keyWidth, keyHeight);
+}
+*/
+//draw7Keys();
+
+
+/*
+
+
+
+
+function teste() {
+  ctx.rect(x0+115, y, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-10*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-12*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-30*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-34*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-36*sm, tileWidth, tileHeight);
+  //D (note D4)
+  ctx.rect(x0+115+100, y-9*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-31*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-33.5*sm, tileWidth, tileHeight);
+  //F (note F4)
+  ctx.rect(x0+115+2*100, y-1*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-3.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-7*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-13*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-15.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-28*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-32.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-33*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-37*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-39.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-43*sm, tileWidth, tileHeight);
+  //space (note G4)
+  ctx.rect(x0+115+3*100, y-6*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-18*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-42*sm, tileWidth, tileHeight);
+  //J (note A4)
+  ctx.rect(x0+115+4*100, y-3*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-4*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-15*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-16*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-24*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-26.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-27.5*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-39*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-40*sm, tileWidth, tileHeight);
+  //K (note C5)
+  ctx.rect(x0+115+5*100, y-19*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-25*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-27*sm, tileWidth, tileHeight);
+
+  //copiando a música inteira para fazer uma oitava acima
+  //S (note C5)
+  ctx.rect(x0+115, y-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-10*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-12*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-30*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-34*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115, y-36*sm-51*sm, tileWidth, tileHeight);
+  //D (note D5)
+  ctx.rect(x0+115+100, y-9*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-31*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+100, y-33.5*sm-51*sm, tileWidth, tileHeight);
+  //F (note F5)
+  ctx.rect(x0+115+2*100, y-1*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-3.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-7*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-13*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-15.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-28*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-32.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-33*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-37*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-39.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+2*100, y-43*sm-51*sm, tileWidth, tileHeight);
+  //space (note G5)
+  ctx.rect(x0+115+3*100, y-6*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-18*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+3*100, y-42*sm-51*sm, tileWidth, tileHeight);
+  //J (note A5)
+  ctx.rect(x0+115+4*100, y-3*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-4*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-15*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-16*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-24*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-26.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-27.5*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-39*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+4*100, y-40*sm-51*sm, tileWidth, tileHeight);
+  //K (note C6)
+  ctx.rect(x0+115+5*100, y-19*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-25*sm-51*sm, tileWidth, tileHeight);
+  ctx.rect(x0+115+5*100, y-27*sm-51*sm, tileWidth, tileHeight);
+}
+
+*/
