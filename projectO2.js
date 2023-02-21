@@ -112,6 +112,195 @@ const keysArray = [
   new Key("rgb(255, 0, 0)", x0KeyL, y0Key, keyWidth, keyHeight)
 ];
 
+let source = {}
+
+function createAndLoad7AudioFiles(noteS, noteD, noteF, noteSpaceBar, noteJ, noteK, noteL) {
+  //notes should be informed using flat notation (not sharp)
+
+  // create an audio context
+  const audioCtx = new AudioContext();
+
+  // create seven audio sources
+  const sourceS = audioCtx.createBufferSource();
+  const sourceD = audioCtx.createBufferSource();
+  const sourceF = audioCtx.createBufferSource();
+  const sourceSpaceBar = audioCtx.createBufferSource();
+  const sourceJ = audioCtx.createBufferSource();
+  const sourceK = audioCtx.createBufferSource();
+  const sourceL = audioCtx.createBufferSource();
+
+  // load seven audio files
+  const audioUrlS = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteS}.mp3`;
+                   //https://cdn.rawgit.com/fuhton/piano-mp3/raw/master/piano-mp3/A4.mp3
+  const audioUrlD = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteD}.mp3`;
+  const audioUrlF = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteF}.mp3`;
+  const audioUrlSpaceBar = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteSpaceBar}.mp3`;
+  const audioUrlJ = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteJ}.mp3`;
+  const audioUrlK = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteK}.mp3`;
+  const audioUrlL = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteL}.mp3`;
+
+  fetch(audioUrlS)
+    .then(response => response.arrayBuffer())
+    .then(buffer => audioCtx.decodeAudioData(buffer))
+    .then(decodedData => {
+      sourceS.buffer = decodedData;
+    });
+
+  fetch(audioUrlD)
+  .then(response => response.arrayBuffer())
+  .then(buffer => audioCtx.decodeAudioData(buffer))
+  .then(decodedData => {
+    sourceD.buffer = decodedData;
+  });
+
+  fetch(audioUrlF)
+  .then(response => response.arrayBuffer())
+  .then(buffer => audioCtx.decodeAudioData(buffer))
+  .then(decodedData => {
+    sourceF.buffer = decodedData;
+  });
+
+  fetch(audioUrlSpaceBar)
+  .then(response => response.arrayBuffer())
+  .then(buffer => audioCtx.decodeAudioData(buffer))
+  .then(decodedData => {
+    sourceSpaceBar.buffer = decodedData;
+  });
+
+  fetch(audioUrlJ)
+  .then(response => response.arrayBuffer())
+  .then(buffer => audioCtx.decodeAudioData(buffer))
+  .then(decodedData => {
+    sourceJ.buffer = decodedData;
+  });
+
+  fetch(audioUrlK)
+  .then(response => response.arrayBuffer())
+  .then(buffer => audioCtx.decodeAudioData(buffer))
+  .then(decodedData => {
+    sourceK.buffer = decodedData;
+  });
+
+  fetch(audioUrlL)
+  .then(response => response.arrayBuffer())
+  .then(buffer => audioCtx.decodeAudioData(buffer))
+  .then(decodedData => {
+    sourceL.buffer = decodedData;
+  });
+
+  // create a channel splitter
+  const splitter = audioCtx.createChannelSplitter(7);
+
+  // connect the sources to the splitter
+  sourceS.connect(splitter);
+  sourceD.connect(splitter);
+  sourceF.connect(splitter);
+  sourceSpaceBar.connect(splitter);
+  sourceJ.connect(splitter);
+  sourceK.connect(splitter);
+  sourceL.connect(splitter);
+
+  // create two gain nodes, one for each channel
+  const gainNodeS = audioCtx.createGain();
+  const gainNodeD = audioCtx.createGain();
+  const gainNodeF = audioCtx.createGain();
+  const gainNodeSpaceBar = audioCtx.createGain();
+  const gainNodeJ = audioCtx.createGain();
+  const gainNodeK = audioCtx.createGain();
+  const gainNodeL = audioCtx.createGain();
+
+  // connect each channel to a gain node
+  splitter.connect(gainNodeS, 0);
+  splitter.connect(gainNodeD, 1);
+  splitter.connect(gainNodeF, 2);
+  splitter.connect(gainNodeSpaceBar, 3);
+  splitter.connect(gainNodeJ, 4);
+  splitter.connect(gainNodeK, 5);
+  splitter.connect(gainNodeL, 6);
+
+  // connect the gain nodes to the audio context destination
+  gainNodeS.connect(audioCtx.destination);
+  gainNodeD.connect(audioCtx.destination);
+  gainNodeF.connect(audioCtx.destination);
+  gainNodeSpaceBar.connect(audioCtx.destination);
+  gainNodeJ.connect(audioCtx.destination);
+  gainNodeK.connect(audioCtx.destination);
+  gainNodeL.connect(audioCtx.destination);
+
+
+  // set the gains for each channel
+  gainNodeS.gain.value = 0.8; // channel 1 volume
+  gainNodeD.gain.value = 0.8; // channel 2 volume
+  gainNodeF.gain.value = 0.8; // channel 3 volume
+  gainNodeSpaceBar.gain.value = 0.8; // channel 4 volume
+  gainNodeJ.gain.value = 0.8; // channel 5 volume
+  gainNodeK.gain.value = 0.8; // channel 6 volume
+  gainNodeL.gain.value = 0.8; // channel 7 volume
+
+
+  // start playing the audio sources
+  /*
+  sourceS.start();
+  sourceD.start();
+  sourceF.start();
+  sourceSpaceBar.start();
+  sourceJ.start();
+  sourceK.start();
+  sourceL.start();
+  */
+
+  return {
+    sourceS,
+    sourceD,
+    sourceF,
+    sourceSpaceBar,
+    sourceJ,
+    sourceK,
+    sourceL
+  }
+}
+
+source = createAndLoad7AudioFiles("C2", "C3", "C4", "E4", "G4", "Bb4", "C5");
+
+//load piano mp3 files
+//meu problema atual tem sido tocar audios simultaneamente
+//tenho uma conversa salva no chatGPT que fala sobre isso
+//próximo passo é codar isso aqui, carregando 7buffers (um para cada nota) com os devidos piano files
+//depois chamar o start() quando for pra rodar o som no keydown
+//consigo fazer tbm um stop() no key up
+var noteText = "C4";
+const pianoA4 = new Audio("./piano-mp3/A4.mp3");
+//const pianoA4 = new Audio("https://cdn.rawgit.com/fuhton/piano-mp3/raw/master/piano-mp3/A4.mp3");
+var pianoNote = new Audio(`./piano-mp3/${noteText}.mp3`);
+
+/*
+//function Switcher(audio_uri, num) {
+function Switcher() {
+	this.channels = [];
+	this.num = num;
+	this.index = 0;
+
+  
+	//or (var i = 0; i < num; i++) {
+	//	this.channels.push(new Channel(audio_uri));
+	//}
+  
+
+  this.channels.push(new Channel("./piano-mp3/A4.mp3"));
+  this.channels.push(new Channel(`./piano-mp3/${noteText}.mp3`));
+
+}
+*/
+
+//Switcher.prototype.play = function() {
+//	this.channels[this.index++].play();
+//	this.index = this.index < this.num ? this.index : 0;
+//}
+
+
+
+
+
 function drawTilesAndKeys(tilesObjectArray) {
   for(i = 0; i < tilesObjectArray.length; i++) {
     ctx.fillStyle = tilesObjectArray[i].color;
@@ -120,7 +309,6 @@ function drawTilesAndKeys(tilesObjectArray) {
 }
 
 drawTilesAndKeys(keysArray);
-
 
 
 let y = 0; //musicTracer (y axis position)
@@ -477,8 +665,9 @@ function beep(vol, freq, duration) {
   v.stop(a.currentTime+duration*0.001)
 }
 
-  //beep(100,600,200);
+//beep(100,600,200);
 
+source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
 window.addEventListener("keydown", (event) => {
   if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
@@ -491,7 +680,9 @@ window.addEventListener("keydown", (event) => {
       //console.log(setTimeout(() => {console.log(":|")}, 3000));
       //if((event.timeStamp-timeStart) < firstHalfEnd) { //version 1.0, same to the other if inside cases
       if(y < firstHalfEnd2) { //version 2.0
-        beep(10, 261.6, 200);
+        //beep(10, 261.6, 200);
+        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
+        source.sourceS.start();
       } else {beep(10, 2*261.6, 200);}
       //console.log(event);
       //console.log(event.timeStamp)
@@ -520,7 +711,9 @@ window.addEventListener("keydown", (event) => {
       
     case "d": 
       if(y < firstHalfEnd2) {
-        beep(10, 293.66, 200);
+        //beep(10, 293.66, 200);
+        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
+        source.sourceD.start();
       } else {beep(10, 2*293.66, 200)}
 
       let isPerfectOrGoodKeyD = false;
@@ -546,7 +739,9 @@ window.addEventListener("keydown", (event) => {
 
     case "f": 
       if(y < firstHalfEnd2) {
-        beep(10, 349.23, 200);
+        //beep(10, 349.23, 200);
+        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
+        source.sourceF.start();
       } else {beep(10, 2*349.23, 200)}
 
       let isPerfectOrGoodKeyF = false;
@@ -572,7 +767,9 @@ window.addEventListener("keydown", (event) => {
 
     case " ": 
       if(y < firstHalfEnd2) {
-        beep(10, 392, 200);
+        //beep(10, 392, 200);
+        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
+        source.sourceSpaceBar.start();
       } else {beep(10, 2*392, 200)}
 
       let isPerfectOrGoodKeySpace = false;
@@ -598,7 +795,9 @@ window.addEventListener("keydown", (event) => {
 
     case "j": 
       if(y < firstHalfEnd2) {
-        beep(10, 440, 200);
+        //beep(10, 440, 200);
+        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
+        source.sourceJ.start();
       } else {beep(10, 2*440, 200)}
 
       let isPerfectOrGoodKeyJ = false;
@@ -624,7 +823,9 @@ window.addEventListener("keydown", (event) => {
 
     case "k": 
       if(y < firstHalfEnd2) {
-        beep(10, 523.25, 200);
+        //beep(10, 523.25, 200);
+        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
+        source.sourceK.start();
       } else {beep(10, 2*523.25, 200)}
 
       let isPerfectOrGoodKeyK = false;
@@ -649,11 +850,17 @@ window.addEventListener("keydown", (event) => {
       break;
 
     case "l": 
+      //pianoNote.play();
+      //pianoA4.play();
+      source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
+      source.sourceL.start();  
       break;
     case "ArrowRight":
       // Do something for "right arrow" key press.
       break;
     case "Enter":
+      pianoA4.play();
+      console.log("played pianoA4")
       // Do something for "enter" or "return" key press.
       break;
     case "Esc": // IE/Edge specific value
@@ -662,6 +869,8 @@ window.addEventListener("keydown", (event) => {
       break;
     case "q":
       console.log("speedFactor: ", speedFactor); //debuggin purposes
+      //createAndLoad7AudioFiles("C2", "C3", "C4", "E4", "G4", "Bb4", "C5");
+      source.sourceS.start();
         break;
     default:
       return; // Quit when this doesn't handle the key event.
@@ -684,7 +893,10 @@ console.log("projectO2 carregado com sucesso");
 
 //coisas que melhorariam esse programa:
  
-
+  //modificar a função e m jeito como carrego e toco as notas
+    //Já que tem que dar load a cada vez que toca (não pode dar start() mais que uma vez), fazer uma função só
+    //fazer uma função cujos parâmetros são tecla e nota
+    
   // ----> REFATORAR O CÓDIGO:
   // --> reference: https://levelup.gitconnected.com/javascript-best-practices-for-writing-more-robust-code-clean-code-f1730db3441d
 
@@ -723,6 +935,7 @@ console.log("projectO2 carregado com sucesso");
     //vantagem: evita fazer os fillRect para tiles que nem estão na tela (não chegaram ou já passaram) 
 
     //bugs
+      //parece haver um delay para a verificação de perfect, good, miss. É como se o range se deslocasse para cima. Verificar isso.
       //música quando tocada muito rápida apresenta bugs no score
       //calibrar melhor as dificuldades (facilitar todas)
       //por que se aperta as teclas muito rápido muitas vezes para de soar? mudar o método de tocar som
@@ -752,10 +965,10 @@ console.log("projectO2 carregado com sucesso");
 
 
 //Last commit:
-  //create class Tile, function drawTiles, and change some let to const, cleaning up the code
+  //Create: screenNotesKey, getArrayOfNotesAndDraw. Modify: drawTiles.
   
 //Novidades deste commit:
-
+  
 
 
 
