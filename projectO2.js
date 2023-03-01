@@ -112,130 +112,43 @@ const keysArray = [
   new Key("rgb(255, 0, 0)", x0KeyL, y0Key, keyWidth, keyHeight)
 ];
 
-let source = {}
-
-function createAndLoad7AudioFiles(noteS, noteD, noteF, noteSpaceBar, noteJ, noteK, noteL) {
+function createAndLoadAudioFile(note) {
   //notes should be informed using flat notation (not sharp)
 
   // create an audio context
   const audioCtx = new AudioContext();
 
   // create seven audio sources
-  const sourceS = audioCtx.createBufferSource();
-  const sourceD = audioCtx.createBufferSource();
-  const sourceF = audioCtx.createBufferSource();
-  const sourceSpaceBar = audioCtx.createBufferSource();
-  const sourceJ = audioCtx.createBufferSource();
-  const sourceK = audioCtx.createBufferSource();
-  const sourceL = audioCtx.createBufferSource();
+  const source = audioCtx.createBufferSource();
 
   // load seven audio files
-  const audioUrlS = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteS}.mp3`;
-                   //https://cdn.rawgit.com/fuhton/piano-mp3/raw/master/piano-mp3/A4.mp3
-  const audioUrlD = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteD}.mp3`;
-  const audioUrlF = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteF}.mp3`;
-  const audioUrlSpaceBar = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteSpaceBar}.mp3`;
-  const audioUrlJ = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteJ}.mp3`;
-  const audioUrlK = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteK}.mp3`;
-  const audioUrlL = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${noteL}.mp3`;
+  const audioUrl = `https://cdn.rawgit.com/fuhton/piano-mp3/master/piano-mp3/${note}.mp3`;
 
-  fetch(audioUrlS)
+  fetch(audioUrl)
     .then(response => response.arrayBuffer())
     .then(buffer => audioCtx.decodeAudioData(buffer))
     .then(decodedData => {
-      sourceS.buffer = decodedData;
+      source.buffer = decodedData;
     });
 
-  fetch(audioUrlD)
-  .then(response => response.arrayBuffer())
-  .then(buffer => audioCtx.decodeAudioData(buffer))
-  .then(decodedData => {
-    sourceD.buffer = decodedData;
-  });
-
-  fetch(audioUrlF)
-  .then(response => response.arrayBuffer())
-  .then(buffer => audioCtx.decodeAudioData(buffer))
-  .then(decodedData => {
-    sourceF.buffer = decodedData;
-  });
-
-  fetch(audioUrlSpaceBar)
-  .then(response => response.arrayBuffer())
-  .then(buffer => audioCtx.decodeAudioData(buffer))
-  .then(decodedData => {
-    sourceSpaceBar.buffer = decodedData;
-  });
-
-  fetch(audioUrlJ)
-  .then(response => response.arrayBuffer())
-  .then(buffer => audioCtx.decodeAudioData(buffer))
-  .then(decodedData => {
-    sourceJ.buffer = decodedData;
-  });
-
-  fetch(audioUrlK)
-  .then(response => response.arrayBuffer())
-  .then(buffer => audioCtx.decodeAudioData(buffer))
-  .then(decodedData => {
-    sourceK.buffer = decodedData;
-  });
-
-  fetch(audioUrlL)
-  .then(response => response.arrayBuffer())
-  .then(buffer => audioCtx.decodeAudioData(buffer))
-  .then(decodedData => {
-    sourceL.buffer = decodedData;
-  });
-
   // create a channel splitter
-  const splitter = audioCtx.createChannelSplitter(7);
+  const splitter = audioCtx.createChannelSplitter(1);
 
   // connect the sources to the splitter
-  sourceS.connect(splitter);
-  sourceD.connect(splitter);
-  sourceF.connect(splitter);
-  sourceSpaceBar.connect(splitter);
-  sourceJ.connect(splitter);
-  sourceK.connect(splitter);
-  sourceL.connect(splitter);
+  source.connect(splitter);
 
   // create two gain nodes, one for each channel
-  const gainNodeS = audioCtx.createGain();
-  const gainNodeD = audioCtx.createGain();
-  const gainNodeF = audioCtx.createGain();
-  const gainNodeSpaceBar = audioCtx.createGain();
-  const gainNodeJ = audioCtx.createGain();
-  const gainNodeK = audioCtx.createGain();
-  const gainNodeL = audioCtx.createGain();
+  const gainNode = audioCtx.createGain();
 
   // connect each channel to a gain node
-  splitter.connect(gainNodeS, 0);
-  splitter.connect(gainNodeD, 1);
-  splitter.connect(gainNodeF, 2);
-  splitter.connect(gainNodeSpaceBar, 3);
-  splitter.connect(gainNodeJ, 4);
-  splitter.connect(gainNodeK, 5);
-  splitter.connect(gainNodeL, 6);
+  splitter.connect(gainNode, 0);
 
   // connect the gain nodes to the audio context destination
-  gainNodeS.connect(audioCtx.destination);
-  gainNodeD.connect(audioCtx.destination);
-  gainNodeF.connect(audioCtx.destination);
-  gainNodeSpaceBar.connect(audioCtx.destination);
-  gainNodeJ.connect(audioCtx.destination);
-  gainNodeK.connect(audioCtx.destination);
-  gainNodeL.connect(audioCtx.destination);
+  gainNode.connect(audioCtx.destination);
 
 
   // set the gains for each channel
-  gainNodeS.gain.value = 0.8; // channel 1 volume
-  gainNodeD.gain.value = 0.8; // channel 2 volume
-  gainNodeF.gain.value = 0.8; // channel 3 volume
-  gainNodeSpaceBar.gain.value = 0.8; // channel 4 volume
-  gainNodeJ.gain.value = 0.8; // channel 5 volume
-  gainNodeK.gain.value = 0.8; // channel 6 volume
-  gainNodeL.gain.value = 0.8; // channel 7 volume
+  gainNode.gain.value = 0.8; // channel 1 volume
 
 
   // start playing the audio sources
@@ -249,25 +162,10 @@ function createAndLoad7AudioFiles(noteS, noteD, noteF, noteSpaceBar, noteJ, note
   sourceL.start();
   */
 
-  return {
-    sourceS,
-    sourceD,
-    sourceF,
-    sourceSpaceBar,
-    sourceJ,
-    sourceK,
-    sourceL
-  }
+  return source
+
 }
 
-source = createAndLoad7AudioFiles("C2", "C3", "C4", "E4", "G4", "Bb4", "C5");
-
-//load piano mp3 files
-//meu problema atual tem sido tocar audios simultaneamente
-//tenho uma conversa salva no chatGPT que fala sobre isso
-//próximo passo é codar isso aqui, carregando 7buffers (um para cada nota) com os devidos piano files
-//depois chamar o start() quando for pra rodar o som no keydown
-//consigo fazer tbm um stop() no key up
 var noteText = "C4";
 const pianoA4 = new Audio("./piano-mp3/A4.mp3");
 //const pianoA4 = new Audio("https://cdn.rawgit.com/fuhton/piano-mp3/raw/master/piano-mp3/A4.mp3");
@@ -296,7 +194,6 @@ function Switcher() {
 //	this.channels[this.index++].play();
 //	this.index = this.index < this.num ? this.index : 0;
 //}
-
 
 
 
@@ -420,7 +317,15 @@ function drawTiles(screenNotes, y, tileColor, x0Tile, tileWidth, tileHeight) {
   }
 }
 
-function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexOfEachScreenNotes, tileColor, keysArray, tileWidth, tileHeight) {
+let expectingS = [];
+let expectingD = [];
+let expectingF = [];
+let expectingSpaceBar = [];
+let expectingJ = [];
+let expectingK = [];
+
+
+function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight) {
   
   objectOfArraysOfKeys = {
     keyS: [y, y-10*sm, y-12*sm, y-30*sm, y-34*sm, y-36*sm, y-51*sm, y-10*sm-51*sm, y-12*sm-51*sm, y-30*sm-51*sm, y-34*sm-51*sm, y-36*sm-51*sm],
@@ -474,51 +379,52 @@ function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexOfEachScreenNo
 
  
   //this part add the notes that are coming close to the game window
-  //console.log("Estive aqui", lastIndexOfEachScreenNotes.keyS, objectOfArraysOfKeys.keyS.length, objectOfArraysOfKeys.keyS[1]);
-  for(i = lastIndexOfEachScreenNotes.keyS; i < objectOfArraysOfKeys.keyS.length; i++) {
+  //console.log("Estive aqui", lastIndexes.screenNotesKeyS, objectOfArraysOfKeys.keyS.length, objectOfArraysOfKeys.keyS[1]);
+  for(i = lastIndexes.screenNotesKeyS; i < objectOfArraysOfKeys.keyS.length; i++) {
     if(objectOfArraysOfKeys.keyS[i] < height + 100 && objectOfArraysOfKeys.keyS[i] > y0 - 100) {
       screenNotesKeyS.push(i);
+      console.log("Estive aqui no screenNotesKeyS.push(i). screenNotesKeyS: ", screenNotesKeyS, "i = ", i);
+      //console.log(`screenNotesKeyS: ${screenNotesKeyS}`)
       //console.log("Estive aqui: ", screenNotesKeyS);
     } else {break}
   }
-  lastIndexOfEachScreenNotes.keyS = i;
-  //console.log("Estive aqui: ", screenNotesKeyS, objectOfArraysOfKeys.keyS[screenNotesKeyS[1]]);
+  lastIndexes.screenNotesKeyS = i;
 
 
-  for(i = lastIndexOfEachScreenNotes.keyD; i < objectOfArraysOfKeys.keyD.length; i++) {
+  for(i = lastIndexes.screenNotesKeyD; i < objectOfArraysOfKeys.keyD.length; i++) {
     if(objectOfArraysOfKeys.keyD[i] < height + 100 && objectOfArraysOfKeys.keyD[i] > y0 - 100) {
       screenNotesKeyD.push(i);
     } else {break}
   }
-  lastIndexOfEachScreenNotes.keyD = i;
+  lastIndexes.screenNotesKeyD = i;
 
-  for(i = lastIndexOfEachScreenNotes.keyF; i < objectOfArraysOfKeys.keyF.length; i++) {
+  for(i = lastIndexes.screenNotesKeyF; i < objectOfArraysOfKeys.keyF.length; i++) {
     if(objectOfArraysOfKeys.keyF[i] < height + 100 && objectOfArraysOfKeys.keyF[i] > y0 - 100) {
       screenNotesKeyF.push(i);
     } else {break}
   }
-  lastIndexOfEachScreenNotes.keyF = i;
+  lastIndexes.screenNotesKeyF = i;
 
-  for(i = lastIndexOfEachScreenNotes.keySpaceBar; i < objectOfArraysOfKeys.keySpaceBar.length; i++) {
+  for(i = lastIndexes.screenNotesKeySpaceBar; i < objectOfArraysOfKeys.keySpaceBar.length; i++) {
     if(objectOfArraysOfKeys.keySpaceBar[i] < height + 100 && objectOfArraysOfKeys.keySpaceBar[i] > y0 - 100) {
       screenNotesKeySpaceBar.push(i);
     } else {break}
   }
-  lastIndexOfEachScreenNotes.keySpaceBar = i;
+  lastIndexes.screenNotesKeySpaceBar = i;
 
-  for(i = lastIndexOfEachScreenNotes.keyJ; i < objectOfArraysOfKeys.keyJ.length; i++) {
+  for(i = lastIndexes.screenNotesKeyJ; i < objectOfArraysOfKeys.keyJ.length; i++) {
     if(objectOfArraysOfKeys.keyJ[i] < height + 100 && objectOfArraysOfKeys.keyJ[i] > y0 - 100) {
       screenNotesKeyJ.push(i);
     } else {break}
   }
-  lastIndexOfEachScreenNotes.keyJ = i;
+  lastIndexes.screenNotesKeyJ = i;
 
-  for(i = lastIndexOfEachScreenNotes.keyK; i < objectOfArraysOfKeys.keyK.length; i++) {
+  for(i = lastIndexes.screenNotesKeyK; i < objectOfArraysOfKeys.keyK.length; i++) {
     if(objectOfArraysOfKeys.keyK[i] < height + 100 && objectOfArraysOfKeys.keyK[i] > y0 - 100) {
       screenNotesKeyK.push(i);
     } else {break}
   }
-  lastIndexOfEachScreenNotes.keyK = i;
+  lastIndexes.screenNotesKeyK = i;
 
   
   //this part draw the notes
@@ -554,19 +460,120 @@ function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexOfEachScreenNo
     ctx.fillRect(keysArray[5].x0, objectOfArraysOfKeys.keyK[screenNotesKeyK[k]], tileWidth, tileHeight);
   }
   
-  return lastIndexOfEachScreenNotes;
+
+
+
+  //create the array of expecting notes the player should play (by saving the index of the objectOfArraysOfKeys.keyS)
+  for(i = lastIndexes.expectingNotesKeyS; i < objectOfArraysOfKeys.keyS.length; i++) {
+    if(objectOfArraysOfKeys.keyS[i] >= (y0Key - ranges.good)) {
+      expectingS.push(i);
+      console.log("Estive aqui no expectingS.push(i). ExpectingS: ", expectingS, "i = ", i);
+    } else {break}
+  }
+  lastIndexes.expectingNotesKeyS = i;
+
+  for(i = lastIndexes.expectingNotesKeyD; i < objectOfArraysOfKeys.keyD.length; i++) {
+    if(objectOfArraysOfKeys.keyD[i] >= (y0Key - ranges.good)) {
+      expectingD.push(i);
+    } else {break}
+  }
+  lastIndexes.expectingNotesKeyD = i;
+
+  for(i = lastIndexes.expectingNotesKeyF; i < objectOfArraysOfKeys.keyF.length; i++) {
+    if(objectOfArraysOfKeys.keyF[i] >= (y0Key - ranges.good)) {
+      expectingF.push(i);
+    } else {break}
+  }
+  lastIndexes.expectingNotesKeyF = i;
+
+  for(i = lastIndexes.expectingNotesKeySpaceBar; i < objectOfArraysOfKeys.keySpaceBar.length; i++) {
+    if(objectOfArraysOfKeys.keySpaceBar[i] >= (y0Key - ranges.good)) {
+      expectingSpaceBar.push(i);
+    } else {break}
+  }
+  lastIndexes.expectingNotesKeySpaceBar = i;
+
+  for(i = lastIndexes.expectingNotesKeyJ; i < objectOfArraysOfKeys.keyJ.length; i++) {
+    if(objectOfArraysOfKeys.keyJ[i] >= (y0Key - ranges.good)) {
+      expectingJ.push(i);
+    } else {break}
+  }
+  lastIndexes.expectingNotesKeyJ = i;
+
+  for(i = lastIndexes.expectingNotesKeyK; i < objectOfArraysOfKeys.keyK.length; i++) {
+    if(objectOfArraysOfKeys.keyK[i] >= (y0Key - ranges.good)) {
+      expectingK.push(i);
+    } else {break}
+  }
+  lastIndexes.expectingNotesKeyK = i;
+
+
+
+
+  //this part verifies if a expecting note in the expected time was played
+  if(objectOfArraysOfKeys.keyS[expectingS[0]] > (y0Key + ranges.good + tileHeight)) {
+    miss++;
+    //document.getElementById("miss").textContent = `Miss: ${miss}`;
+    expectingS.shift();
+  }
+
+  if(objectOfArraysOfKeys.keyD[expectingD[0]] > (y0Key + ranges.good + tileHeight)) {
+    miss++;
+    //document.getElementById("miss").textContent = `Miss: ${miss}`;
+    expectingD.shift();
+  }
+
+  if(objectOfArraysOfKeys.keyF[expectingF[0]] > (y0Key + ranges.good + tileHeight)) {
+    miss++;
+    //document.getElementById("miss").textContent = `Miss: ${miss}`;
+    expectingF.shift();
+  }
+
+  if(objectOfArraysOfKeys.keySpaceBar[expectingSpaceBar[0]] > (y0Key + ranges.good + tileHeight)) {
+    miss++;
+    //document.getElementById("miss").textContent = `Miss: ${miss}`;
+    expectingSpaceBar.shift();
+  }
+
+  if(objectOfArraysOfKeys.keyJ[expectingJ[0]] > (y0Key + ranges.good + tileHeight)) {
+    miss++;
+    //document.getElementById("miss").textContent = `Miss: ${miss}`;
+    expectingJ.shift();
+  }
+
+  if(objectOfArraysOfKeys.keyK[expectingK[0]] > (y0Key + ranges.good + tileHeight)) {
+    miss++;
+    //document.getElementById("miss").textContent = `Miss: ${miss}`;
+    expectingK.shift();
+  }
+
+
+  for(k = 0; k < screenNotesKeyS.length; k++) {
+    ctx.fillStyle = tileColor;
+    ctx.fillRect(keysArray[0].x0, objectOfArraysOfKeys.keyS[screenNotesKeyS[k]], tileWidth, tileHeight);
+  }
+
+
+  document.getElementById("miss").textContent = `Miss: ${miss}`;
   
+  return lastIndexes;
+
 }
 
 
-let lastIndexOfEachScreenNotes = {
-  keyS: 0,
-  keyD: 0,
-  keyF: 0,
-  keySpaceBar: 0,
-  keyJ: 0,
-  keyK: 0
-  
+let lastIndexes = {
+  expectingNotesKeyS: 0,
+  expectingNotesKeyD: 0,
+  expectingNotesKeyF: 0,
+  expectingNotesKeySpaceBar: 0,
+  expectingNotesKeyJ: 0,
+  expectingNotesKeyK: 0,
+  screenNotesKeyS: 0,
+  screenNotesKeyD: 0,
+  screenNotesKeyF: 0,
+  screenNotesKeySpaceBar: 0,
+  screenNotesKeyJ: 0,
+  screenNotesKeyK: 0
 }
 
 
@@ -591,7 +598,7 @@ function draw1() {
 
   drawTilesAndKeys(keysArray);
   //teste();
-  lastIndexOfEachScreenNotes = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexOfEachScreenNotes, tileColor, keysArray, tileWidth, tileHeight);
+  lastIndexes = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight);
 
   //tile color
   ctx.fillStyle = "rgb(170, 170, 170)";
@@ -618,6 +625,15 @@ function music1Button() {
     isButtonMusic1Clicked = false;
     document.getElementById("music1").textContent = "Start music 1";
     enableButtons();
+
+    setTimeout(function () {miss = 0}, 20);
+    miss = 0;
+    good = 0;
+    perfect = 0;
+    document.getElementById("perfect").textContent = `Perfect: ${perfect}`;
+    document.getElementById("good").textContent = `Good: ${good}`;
+    setTimeout(function () {document.getElementById("miss").textContent = `Miss: ${miss}`}, 22);
+
   } else {
     
     
@@ -626,17 +642,37 @@ function music1Button() {
     isButtonMusic1Clicked = true;   
 
     document.getElementById("music1").textContent = "Stop music 1";
-    miss = good = perfect = 0;
-    lastIndexOfEachScreenNotes = {
-      keyS: 0,
-      keyD: 0,
-      keyF: 0,
-      keySpaceBar: 0,
-      keyJ: 0,
-      keyK: 0
-      
-    }
+    miss = 0;
+    good = 0;
+    perfect = 0;
+
+    document.getElementById("perfect").textContent = `Perfect: ${perfect}`;
+    document.getElementById("good").textContent = `Good: ${good}`;
+    document.getElementById("miss").textContent = `Miss: ${miss}`;
     
+    
+    lastIndexes = {
+      expectingNotesKeyS: 0,
+      expectingNotesKeyD: 0,
+      expectingNotesKeyF: 0,
+      expectingNotesKeySpaceBar: 0,
+      expectingNotesKeyJ: 0,
+      expectingNotesKeyK: 0,
+      screenNotesKeyS: 0,
+      screenNotesKeyD: 0,
+      screenNotesKeyF: 0,
+      screenNotesKeySpaceBar: 0,
+      screenNotesKeyJ: 0,
+      screenNotesKeyK: 0
+    }
+
+    expectingS = [];
+    expectingD = [];
+    expectingF = [];
+    expectingSpaceBar = [];
+    expectingJ = [];
+    expectingK = [];
+
     ranges = getDifficulty();
     console.log(`range P: ${ranges.perfect}\nrange G: ${ranges.good}`);
 
@@ -667,7 +703,6 @@ function beep(vol, freq, duration) {
 
 //beep(100,600,200);
 
-source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
 window.addEventListener("keydown", (event) => {
   if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
@@ -681,12 +716,16 @@ window.addEventListener("keydown", (event) => {
       //if((event.timeStamp-timeStart) < firstHalfEnd) { //version 1.0, same to the other if inside cases
       if(y < firstHalfEnd2) { //version 2.0
         //beep(10, 261.6, 200);
-        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
-        source.sourceS.start();
+        let sourceS = createAndLoadAudioFile("C4");
+        sourceS.start();
       } else {beep(10, 2*261.6, 200);}
       //console.log(event);
       //console.log(event.timeStamp)
       
+      if(expectingS.length > 0){
+        expectingS.shift();
+      }
+
       let isPerfectOrGoodKeyS = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
         if(ctx.getImageData(x0KeyS, k, 1, 1).data[0] == 170) {
@@ -700,10 +739,12 @@ window.addEventListener("keydown", (event) => {
           break;
         }
       }
+        /* //this miss attribution may not be good, I am testing without it:
         if(!isPerfectOrGoodKeyS) {
           miss++;
         }
       isPerfectOrGoodKeyS = false;
+      */
 
       console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       //só peguei o timeStart, preciso fazer o tempo transcorrido
@@ -712,9 +753,13 @@ window.addEventListener("keydown", (event) => {
     case "d": 
       if(y < firstHalfEnd2) {
         //beep(10, 293.66, 200);
-        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
-        source.sourceD.start();
+        let sourceD = createAndLoadAudioFile("D4");
+        sourceD.start();
       } else {beep(10, 2*293.66, 200)}
+
+      if(expectingD.length > 0){
+        expectingD.shift();
+      }
 
       let isPerfectOrGoodKeyD = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
@@ -729,10 +774,12 @@ window.addEventListener("keydown", (event) => {
           break;
         }
       }
+        /* //this miss attribution may not be good, I am testing without it:
         if(!isPerfectOrGoodKeyD) {
           miss++;
         }
       isPerfectOrGoodKeyD = false;
+      */
 
       console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
@@ -740,9 +787,13 @@ window.addEventListener("keydown", (event) => {
     case "f": 
       if(y < firstHalfEnd2) {
         //beep(10, 349.23, 200);
-        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
-        source.sourceF.start();
+        let sourceF = createAndLoadAudioFile("F4");
+        sourceF.start();
       } else {beep(10, 2*349.23, 200)}
+
+      if(expectingF.length > 0){
+        expectingF.shift();
+      }
 
       let isPerfectOrGoodKeyF = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
@@ -757,10 +808,12 @@ window.addEventListener("keydown", (event) => {
           break;
         }
       }
+        /* //this miss attribution may not be good, I am testing without it:
         if(!isPerfectOrGoodKeyF) {
           miss++;
         }
       isPerfectOrGoodKeyF = false;
+      */
 
       console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
@@ -768,9 +821,13 @@ window.addEventListener("keydown", (event) => {
     case " ": 
       if(y < firstHalfEnd2) {
         //beep(10, 392, 200);
-        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
-        source.sourceSpaceBar.start();
+        let sourceSpaceBar = createAndLoadAudioFile("G4");
+        sourceSpaceBar.start();
       } else {beep(10, 2*392, 200)}
+
+      if(expectingSpaceBar.length > 0){
+        expectingSpaceBar.shift();
+      }
 
       let isPerfectOrGoodKeySpace = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
@@ -785,10 +842,12 @@ window.addEventListener("keydown", (event) => {
           break;
         }
       }
+      /* //this miss attribution may not be good, I am testing without it:
         if(!isPerfectOrGoodKeySpace) {
           miss++;
         }
       isPerfectOrGoodKeySpace = false;
+      */
 
       console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
@@ -796,9 +855,13 @@ window.addEventListener("keydown", (event) => {
     case "j": 
       if(y < firstHalfEnd2) {
         //beep(10, 440, 200);
-        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
-        source.sourceJ.start();
+        let sourceJ = createAndLoadAudioFile("A4");
+        sourceJ.start();
       } else {beep(10, 2*440, 200)}
+
+      if(expectingJ.length > 0){
+        expectingJ.shift();
+      }
 
       let isPerfectOrGoodKeyJ = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
@@ -813,10 +876,12 @@ window.addEventListener("keydown", (event) => {
           break;
         }
       }
+      /* //this miss attribution may not be good, I am testing without it:
         if(!isPerfectOrGoodKeyJ) {
           miss++;
         }
       isPerfectOrGoodKeyJ = false;
+      */
 
       console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
@@ -824,9 +889,13 @@ window.addEventListener("keydown", (event) => {
     case "k": 
       if(y < firstHalfEnd2) {
         //beep(10, 523.25, 200);
-        source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
-        source.sourceK.start();
+        let sourceK = createAndLoadAudioFile("C5");
+        sourceK.start();
       } else {beep(10, 2*523.25, 200)}
+
+      if(expectingK.length > 0){
+        expectingK.shift();
+      }
 
       let isPerfectOrGoodKeyK = false;
       for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
@@ -841,10 +910,12 @@ window.addEventListener("keydown", (event) => {
           break;
         }
       }
+      /* //this miss attribution may not be good, I am testing without it:
         if(!isPerfectOrGoodKeyK) {
           miss++;
         }
       isPerfectOrGoodKeyK = false;
+      */
 
       console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
@@ -852,8 +923,8 @@ window.addEventListener("keydown", (event) => {
     case "l": 
       //pianoNote.play();
       //pianoA4.play();
-      source = createAndLoad7AudioFiles("C4", "D4", "F4", "G4", "A4", "C5", "C5");
-      source.sourceL.start();  
+      let sourceL = createAndLoadAudioFile("C6");
+        sourceL.start();
       break;
     case "ArrowRight":
       // Do something for "right arrow" key press.
@@ -886,20 +957,74 @@ window.addEventListener("keydown", (event) => {
   event.preventDefault();
 }, true);
 
+
+/*
+window.addEventListener("keyup", (event) => {
+  if (event.defaultPrevented) {
+    return; // Do nothing if the event was already processed
+  }
+
+
+  switch (event.key) {
+
+    case "s": 
+      source.sourceS.stop();
+      //gainNodeS.gain.value = 0.4; // channel 1 volume
+      break;
+      
+    case "d": 
+      source.sourceD.stop();
+      break;
+
+    case "f": 
+      source.sourceF.stop();
+      break;
+
+    case " ": 
+      source.sourceSpaceBar.stop();
+      break;
+
+    case "j": 
+      source.sourceJ.stop();
+      break;
+        
+    case "k": 
+      source.sourceK.stop();
+      break;
+
+    case "l": 
+      source.sourceL.stop();  
+      break;
+
+    default:
+      return; // Quit when this doesn't handle the key event.
+  }
+
+  // Cancel the default action to avoid it being handled twice
+  event.preventDefault();
+}, true);
+
+*/
+
 console.log(ctx.getImageData(315, 850, 1, 1).data);
 
 
 console.log("projectO2 carregado com sucesso");
 
 //coisas que melhorariam esse programa:
+
+  //criar testes! (pedir ajuda do chatGPT, para ter exemplos, por exemplo)
  
-  //modificar a função e m jeito como carrego e toco as notas
-    //Já que tem que dar load a cada vez que toca (não pode dar start() mais que uma vez), fazer uma função só
-    //fazer uma função cujos parâmetros são tecla e nota
+  //melhorar a function music1Button() na parte do clear interval. Executar o resto depois que isso ocorrer. Assim, não precisarei dos outros timeouts
+  //posicionar melhor os document.getElementById("miss").textContent = `Miss: ${miss}`;, principalmente dentro da função getArrayOfNotesAndDraw
+
+  //? Já que tem que dar load a cada vez que toca (não pode dar start() mais que uma vez), fazer uma função só ?
     
+
   // ----> REFATORAR O CÓDIGO:
   // --> reference: https://levelup.gitconnected.com/javascript-best-practices-for-writing-more-robust-code-clean-code-f1730db3441d
 
+    //criar função para atualizar/resetar valores das variáveis
     //redefinir o nome de algumas coisas e/ou criar nome para o que não tem
     //comentar o que cada parte do código faz, do início ao fim
     //criar funções
@@ -935,7 +1060,10 @@ console.log("projectO2 carregado com sucesso");
     //vantagem: evita fazer os fillRect para tiles que nem estão na tela (não chegaram ou já passaram) 
 
     //bugs
+       //miss ficou mais bugado desde a implementação da feature que atribui miss a uma nota não apertada
+        //POSSÍVEL SOLUÇÃO: deixar de contabilizar o miss fora dessa situação. Se apertar quando não deve, não considerar um miss.
       //parece haver um delay para a verificação de perfect, good, miss. É como se o range se deslocasse para cima. Verificar isso.
+        //ver conversa com Igor sobre isso
       //música quando tocada muito rápida apresenta bugs no score
       //calibrar melhor as dificuldades (facilitar todas)
       //por que se aperta as teclas muito rápido muitas vezes para de soar? mudar o método de tocar som
@@ -961,13 +1089,14 @@ console.log("projectO2 carregado com sucesso");
   //tirar o lixo do código (codigos comentados, guardar somente de backup num novo arquivo OLD, deixar esse aqui como o original)
   //tirar o lixo do código (códigos que não são úteis)
 
+  //fazer uma função createAndLoadAudioFile(note) que retorna um source para dar start()
 
 
 
-//Last commit:
-  //Create: screenNotesKey, getArrayOfNotesAndDraw. Modify: drawTiles.
+
   
 //Novidades deste commit:
+  //Add a miss counter if no key is pressed when supposed to (and now it is the only way to miss). Change createAndLoad7AudioFiles(7notes) to createAndLoadAudioFile(note).
   
 
 
