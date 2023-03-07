@@ -166,36 +166,8 @@ function createAndLoadAudioFile(note) {
 
 }
 
-var noteText = "C4";
-const pianoA4 = new Audio("./piano-mp3/A4.mp3");
+
 //const pianoA4 = new Audio("https://cdn.rawgit.com/fuhton/piano-mp3/raw/master/piano-mp3/A4.mp3");
-var pianoNote = new Audio(`./piano-mp3/${noteText}.mp3`);
-
-/*
-//function Switcher(audio_uri, num) {
-function Switcher() {
-	this.channels = [];
-	this.num = num;
-	this.index = 0;
-
-  
-	//or (var i = 0; i < num; i++) {
-	//	this.channels.push(new Channel(audio_uri));
-	//}
-  
-
-  this.channels.push(new Channel("./piano-mp3/A4.mp3"));
-  this.channels.push(new Channel(`./piano-mp3/${noteText}.mp3`));
-
-}
-*/
-
-//Switcher.prototype.play = function() {
-//	this.channels[this.index++].play();
-//	this.index = this.index < this.num ? this.index : 0;
-//}
-
-
 
 
 function drawTilesAndKeys(tilesObjectArray) {
@@ -214,7 +186,7 @@ let sm = 256; //quarter note (seminima)
 let speedInput = document.getElementById("speed");
 let speedFactor = 0; // -2.5 to +2.5, step: 0.5 (HTML)
 let musicSpeed;
-musicSpeed = 4 + speedFactor;
+musicSpeed = 3 + speedFactor;
 //let firstHalfEnd = 1.14586 * 7 * 12812 / musicSpeed;
 let firstHalfEnd2 = 12812; //12812 is the half music "length" in pixels, will value zero when it is done
   //850 - 70 + 256*47
@@ -226,19 +198,19 @@ let firstHalfEnd2 = 12812; //12812 is the half music "length" in pixels, will va
 speedInput.addEventListener('input', function() {
   //if(speedInput.length < 3) {
     speedFactor = this.value;
-    musicSpeed = 4 + 1*speedFactor; //bug do JS? se não colocar o 1 atrás não funciona!
+    musicSpeed = 3 + 1*speedFactor; //bug do JS? se não colocar o 1 atrás não funciona!
   //}
 });
 
 
 //ranges to add or decrease the difficulty: more the range more the easiness
 let ranges = {
-  perfect: 4, //range to consider perfect: max value = range, negative number are possible, min value = -(range)
+  perfect: 10, //range to consider perfect: max value = range, negative number are possible, min value = -(range)
               //in the case perfect = good, never will be good notes, only perfect or miss
-  good: 18 //range to consider good or miss
+  good: 24 //range to consider good or miss
 }
 
-console.log(`range P: ${ranges.perfect}\nrange G: ${ranges.good}\ntype ${typeof(ranges.good)}`);
+//console.log(`range P: ${ranges.perfect}\nrange G: ${ranges.good}\ntype ${typeof(ranges.good)}`);
 
 
 let perfect = 0, good = 0, miss = 0;
@@ -247,21 +219,21 @@ let perfect = 0, good = 0, miss = 0;
 function getDifficulty() {  
   let radioDifficulty = document.querySelectorAll('input[name="difficulty"]');
   let ranges = {
-    perfect: 4,
-    good: 18
+    perfect: 10,
+    good: 24
   }
 
   for (radioButton of radioDifficulty) {
     if(radioButton.checked) {
       if(radioButton.value == "easy") {
-        ranges.perfect = 14;
-        ranges.good = 30; 
+        ranges.perfect = 17;
+        ranges.good = 36; 
       } else if(radioButton.value == "normal") {
-        ranges.perfect = 10;
-        ranges.good = 24; 
+        ranges.perfect = 12;
+        ranges.good = 30; 
       } else if(radioButton.value == "hard") {
-        ranges.perfect = 2;
-        ranges.good = 16; 
+        ranges.perfect = 8;
+        ranges.good = 24; 
       }
 
     }
@@ -324,6 +296,14 @@ let expectingSpaceBar = [];
 let expectingJ = [];
 let expectingK = [];
 
+let objectOfArraysOfKeys = {
+  keyS: [y, y-10*sm, y-12*sm, y-30*sm, y-34*sm, y-36*sm, y-51*sm, y-10*sm-51*sm, y-12*sm-51*sm, y-30*sm-51*sm, y-34*sm-51*sm, y-36*sm-51*sm],
+  keyD: [y-9*sm, y-31*sm, y-33.5*sm, y-9*sm-51*sm, y-31*sm-51*sm, y-33.5*sm-51*sm],
+  keyF: [y-1*sm, y-3.5*sm, y-7*sm, y-13*sm, y-15.5*sm, y-28*sm, y-32.5*sm, y-33*sm, y-37*sm, y-39.5*sm, y-43*sm, y-1*sm-51*sm, y-3.5*sm-51*sm, y-7*sm-51*sm, y-13*sm-51*sm, y-15.5*sm-51*sm, y-28*sm-51*sm, y-32.5*sm-51*sm, y-33*sm-51*sm, y-37*sm-51*sm, y-39.5*sm-51*sm, y-43*sm-51*sm],
+  keySpaceBar: [y-6*sm, y-18*sm, y-42*sm, y-6*sm-51*sm, y-18*sm-51*sm, y-42*sm-51*sm],
+  keyJ: [y-3*sm, y-4*sm, y-15*sm, y-16*sm, y-24*sm, y-26.5*sm, y-27.5*sm, y-39*sm, y-40*sm, y-3*sm-51*sm, y-4*sm-51*sm, y-15*sm-51*sm, y-16*sm-51*sm, y-24*sm-51*sm, y-26.5*sm-51*sm, y-27.5*sm-51*sm, y-39*sm-51*sm, y-40*sm-51*sm],
+  keyK: [y-19*sm, y-25*sm, y-27*sm, y-19*sm-51*sm, y-25*sm-51*sm, y-27*sm-51*sm]
+}
 
 function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight) {
   
@@ -335,7 +315,29 @@ function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexes, tileColor,
     keyJ: [y-3*sm, y-4*sm, y-15*sm, y-16*sm, y-24*sm, y-26.5*sm, y-27.5*sm, y-39*sm, y-40*sm, y-3*sm-51*sm, y-4*sm-51*sm, y-15*sm-51*sm, y-16*sm-51*sm, y-24*sm-51*sm, y-26.5*sm-51*sm, y-27.5*sm-51*sm, y-39*sm-51*sm, y-40*sm-51*sm],
     keyK: [y-19*sm, y-25*sm, y-27*sm, y-19*sm-51*sm, y-25*sm-51*sm, y-27*sm-51*sm]
   }
+
+  //this part search for notes that already passed the screen and don't need to be printed anymore
+  function searchNotesNotToBePrintedAnymore(screenNotesKey, objectOfArraysOfKeys, height) {
+    for(j = 0; j < screenNotesKey.length; j++) { 
+      if(objectOfArraysOfKeys[screenNotesKey[j]] > height + 100) {     
+        //console.log("Estou aqui Remove notas ", j, screenNotesKeyS[j], objectOfArraysOfKeys.keyS[screenNotesKeyS[j]]);
+        //delete screenNotesKeyS[j];
+        //console.log(screenNotesKeyS);
+        screenNotesKey.shift(); 
+      }
+    }
+  }
  
+  searchNotesNotToBePrintedAnymore(screenNotesKeyS, objectOfArraysOfKeys.keyS, height);
+  //console.log(screenNotesKeyS);
+  searchNotesNotToBePrintedAnymore(screenNotesKeyD, objectOfArraysOfKeys.keyD, height);
+  searchNotesNotToBePrintedAnymore(screenNotesKeyF, objectOfArraysOfKeys.keyF, height);
+  searchNotesNotToBePrintedAnymore(screenNotesKeySpaceBar, objectOfArraysOfKeys.keySpaceBar, height);
+  searchNotesNotToBePrintedAnymore(screenNotesKeyJ, objectOfArraysOfKeys.keyJ, height);
+  searchNotesNotToBePrintedAnymore(screenNotesKeyK, objectOfArraysOfKeys.keyK, height);
+
+
+  /*old code
   //this part search for notes that already passed the screen and don't need to be printed anymore
   for(j = 0; j < screenNotesKeyS.length; j++) { 
     if(objectOfArraysOfKeys.keyS[screenNotesKeyS[j]] > height + 100) {     
@@ -376,14 +378,15 @@ function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexes, tileColor,
       screenNotesKeyK.shift(); 
     }
   }
+  */
 
  
-  //this part add the notes that are coming close to the game window
+  //this part adds the notes that are coming close to the game window
   //console.log("Estive aqui", lastIndexes.screenNotesKeyS, objectOfArraysOfKeys.keyS.length, objectOfArraysOfKeys.keyS[1]);
   for(i = lastIndexes.screenNotesKeyS; i < objectOfArraysOfKeys.keyS.length; i++) {
     if(objectOfArraysOfKeys.keyS[i] < height + 100 && objectOfArraysOfKeys.keyS[i] > y0 - 100) {
       screenNotesKeyS.push(i);
-      console.log("Estive aqui no screenNotesKeyS.push(i). screenNotesKeyS: ", screenNotesKeyS, "i = ", i);
+      //console.log("Estive aqui no screenNotesKeyS.push(i). screenNotesKeyS: ", screenNotesKeyS, "i = ", i);
       //console.log(`screenNotesKeyS: ${screenNotesKeyS}`)
       //console.log("Estive aqui: ", screenNotesKeyS);
     } else {break}
@@ -467,7 +470,7 @@ function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexes, tileColor,
   for(i = lastIndexes.expectingNotesKeyS; i < objectOfArraysOfKeys.keyS.length; i++) {
     if(objectOfArraysOfKeys.keyS[i] >= (y0Key - ranges.good)) {
       expectingS.push(i);
-      console.log("Estive aqui no expectingS.push(i). ExpectingS: ", expectingS, "i = ", i);
+      //console.log("Estive aqui no expectingS.push(i). ExpectingS: ", expectingS, "i = ", i);
     } else {break}
   }
   lastIndexes.expectingNotesKeyS = i;
@@ -512,37 +515,44 @@ function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexes, tileColor,
 
   //this part verifies if a expecting note in the expected time was played
   if(objectOfArraysOfKeys.keyS[expectingS[0]] > (y0Key + ranges.good + tileHeight)) {
+    //console.log(expectingS.length);
     miss++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
     //document.getElementById("miss").textContent = `Miss: ${miss}`;
     expectingS.shift();
   }
 
   if(objectOfArraysOfKeys.keyD[expectingD[0]] > (y0Key + ranges.good + tileHeight)) {
     miss++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
     //document.getElementById("miss").textContent = `Miss: ${miss}`;
     expectingD.shift();
   }
 
   if(objectOfArraysOfKeys.keyF[expectingF[0]] > (y0Key + ranges.good + tileHeight)) {
     miss++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
     //document.getElementById("miss").textContent = `Miss: ${miss}`;
     expectingF.shift();
   }
 
   if(objectOfArraysOfKeys.keySpaceBar[expectingSpaceBar[0]] > (y0Key + ranges.good + tileHeight)) {
     miss++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
     //document.getElementById("miss").textContent = `Miss: ${miss}`;
     expectingSpaceBar.shift();
   }
 
   if(objectOfArraysOfKeys.keyJ[expectingJ[0]] > (y0Key + ranges.good + tileHeight)) {
     miss++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
     //document.getElementById("miss").textContent = `Miss: ${miss}`;
     expectingJ.shift();
   }
 
   if(objectOfArraysOfKeys.keyK[expectingK[0]] > (y0Key + ranges.good + tileHeight)) {
     miss++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
     //document.getElementById("miss").textContent = `Miss: ${miss}`;
     expectingK.shift();
   }
@@ -556,7 +566,17 @@ function getArrayOfNotesAndDraw(objectOfArraysOfKeys, y, lastIndexes, tileColor,
 
   document.getElementById("miss").textContent = `Miss: ${miss}`;
   
-  return lastIndexes;
+  let objectFromGetArrayOfNotesAndDraw = {
+    lastIndexes: lastIndexes,
+    expectingS: expectingS,
+    expectingD: expectingD,
+    expectingF: expectingF,
+    expectingSpaceBar: expectingSpaceBar,
+    expectingJ: expectingJ,
+    expectingK: expectingK,
+    objectOfArraysOfKeys: objectOfArraysOfKeys
+  }
+  return objectFromGetArrayOfNotesAndDraw;
 
 }
 
@@ -598,7 +618,18 @@ function draw1() {
 
   drawTilesAndKeys(keysArray);
   //teste();
-  lastIndexes = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight);
+  lastIndexes = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).lastIndexes;
+
+  expectingS = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).expectingS;
+  expectingD = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).expectingD;
+  expectingF = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).expectingF;
+  expectingSpaceBar = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).expectingSpaceBar;
+  expectingJ = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).expectingJ;
+  expectingK = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).expectingK;
+
+  objectOfArraysOfKeys = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).objectOfArraysOfKeys;
+
+
 
   //tile color
   ctx.fillStyle = "rgb(170, 170, 170)";
@@ -674,7 +705,7 @@ function music1Button() {
     expectingK = [];
 
     ranges = getDifficulty();
-    console.log(`range P: ${ranges.perfect}\nrange G: ${ranges.good}`);
+    //console.log(`range P: ${ranges.perfect}\nrange G: ${ranges.good}`);
 
     disableButtons();   
   }
@@ -712,6 +743,7 @@ window.addEventListener("keydown", (event) => {
   switch (event.key) {
 
     case "s": 
+      //console.log(expectingS.length);
       //console.log(setTimeout(() => {console.log(":|")}, 3000));
       //if((event.timeStamp-timeStart) < firstHalfEnd) { //version 1.0, same to the other if inside cases
       if(y < firstHalfEnd2) { //version 2.0
@@ -722,19 +754,51 @@ window.addEventListener("keydown", (event) => {
       //console.log(event);
       //console.log(event.timeStamp)
       
-      if(expectingS.length > 0){
-        expectingS.shift();
-      }
-
+      //I am trying to add the good and perfect verification here
       let isPerfectOrGoodKeyS = false;
-      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      if(expectingS.length > 0) {
+        //console.log("Estou aqui no expectingS.length > 0, and the value of it is: ", expectingS);
+        if(objectOfArraysOfKeys.keyS[expectingS[0]] <= (y0 + y0Key + ranges.perfect + tileHeight)) {
+          if(objectOfArraysOfKeys.keyS[expectingS[0]] >= (y0 + y0Key - ranges.perfect)) {
+            perfect++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            isPerfectOrGoodKeyS = true;
+            expectingS.shift();
+          } else {
+            good++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            isPerfectOrGoodKeyS = true;
+            expectingS.shift();
+          }
+        } else {            
+          good++;
+          console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          isPerfectOrGoodKeyS = true;
+          expectingS.shift();
+        }
+      } //if I want to add a miss cause when a note is played when no notes are expected, here is the place:
+      /* else {
+        miss++;
+        console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+        //isPerfectOrGoodKeyS = true;
+        //expectingS.shift();
+      }
+      */
+
+
+      /*
+      //original line for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k++) {
+      //I changed looking for a solution to the counting problem (miss, good and perfect) 
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k++) {
         if(ctx.getImageData(x0KeyS, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             isPerfectOrGoodKeyS = true;
             break;
           }
           good++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           isPerfectOrGoodKeyS = true;
           break;
         }
@@ -745,8 +809,8 @@ window.addEventListener("keydown", (event) => {
         }
       isPerfectOrGoodKeyS = false;
       */
+      
 
-      console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       //só peguei o timeStart, preciso fazer o tempo transcorrido
       break;
       
@@ -757,19 +821,37 @@ window.addEventListener("keydown", (event) => {
         sourceD.start();
       } else {beep(10, 2*293.66, 200)}
 
-      if(expectingD.length > 0){
-        expectingD.shift();
+      if(expectingD.length > 0) {
+        //console.log("Estou aqui no expectingS.length > 0, and the value of it is: ", expectingS);
+        if(objectOfArraysOfKeys.keyD[expectingD[0]] <= (y0 + y0Key + ranges.perfect + tileHeight)) {
+          if(objectOfArraysOfKeys.keyD[expectingD[0]] >= (y0 + y0Key - ranges.perfect)) {
+            perfect++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingD.shift();
+          } else {
+            good++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingD.shift();
+          }
+        } else {            
+          good++;
+          console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          expectingD.shift();
+        }
       }
 
+      /*
       let isPerfectOrGoodKeyD = false;
-      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k++) {
         if(ctx.getImageData(x0KeyD, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             isPerfectOrGoodKeyD = true;
             break;
           }
           good++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           isPerfectOrGoodKeyD = true;
           break;
         }
@@ -781,7 +863,6 @@ window.addEventListener("keydown", (event) => {
       isPerfectOrGoodKeyD = false;
       */
 
-      console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
 
     case "f": 
@@ -791,19 +872,38 @@ window.addEventListener("keydown", (event) => {
         sourceF.start();
       } else {beep(10, 2*349.23, 200)}
 
-      if(expectingF.length > 0){
-        expectingF.shift();
+      
+      if(expectingF.length > 0) {
+        //console.log("Estou aqui no expectingS.length > 0, and the value of it is: ", expectingS);
+        if(objectOfArraysOfKeys.keyF[expectingF[0]] <= (y0 + y0Key + ranges.perfect + tileHeight)) {
+          if(objectOfArraysOfKeys.keyF[expectingF[0]] >= (y0 + y0Key - ranges.perfect)) {
+            perfect++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingF.shift();
+          } else {
+            good++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingF.shift();
+          }
+        } else {            
+          good++;
+          console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          expectingF.shift();
+        }
       }
 
+      /*
       let isPerfectOrGoodKeyF = false;
-      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k++) {
         if(ctx.getImageData(x0KeyF, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             isPerfectOrGoodKeyF = true;
             break;
           }
           good++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           isPerfectOrGoodKeyF = true;
           break;
         }
@@ -815,7 +915,6 @@ window.addEventListener("keydown", (event) => {
       isPerfectOrGoodKeyF = false;
       */
 
-      console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
 
     case " ": 
@@ -825,19 +924,38 @@ window.addEventListener("keydown", (event) => {
         sourceSpaceBar.start();
       } else {beep(10, 2*392, 200)}
 
-      if(expectingSpaceBar.length > 0){
-        expectingSpaceBar.shift();
+      
+      if(expectingSpaceBar.length > 0) {
+        //console.log("Estou aqui no expectingS.length > 0, and the value of it is: ", expectingS);
+        if(objectOfArraysOfKeys.keySpaceBar[expectingSpaceBar[0]] <= (y0 + y0Key + ranges.perfect + tileHeight)) {
+          if(objectOfArraysOfKeys.keySpaceBar[expectingSpaceBar[0]] >= (y0 + y0Key - ranges.perfect)) {
+            perfect++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingSpaceBar.shift();
+          } else {
+            good++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingSpaceBar.shift();
+          }
+        } else {            
+          good++;
+          console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          expectingSpaceBar.shift();
+        }
       }
 
+      /*
       let isPerfectOrGoodKeySpace = false;
-      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k++) {
         if(ctx.getImageData(x0KeySpaceBar, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             isPerfectOrGoodKeySpace = true;
             break;
           }
           good++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           isPerfectOrGoodKeySpace = true;
           break;
         }
@@ -849,7 +967,6 @@ window.addEventListener("keydown", (event) => {
       isPerfectOrGoodKeySpace = false;
       */
 
-      console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
 
     case "j": 
@@ -859,19 +976,37 @@ window.addEventListener("keydown", (event) => {
         sourceJ.start();
       } else {beep(10, 2*440, 200)}
 
-      if(expectingJ.length > 0){
-        expectingJ.shift();
+      if(expectingJ.length > 0) {
+        //console.log("Estou aqui no expectingS.length > 0, and the value of it is: ", expectingS);
+        if(objectOfArraysOfKeys.keyJ[expectingJ[0]] <= (y0 + y0Key + ranges.perfect + tileHeight)) {
+          if(objectOfArraysOfKeys.keyJ[expectingJ[0]] >= (y0 + y0Key - ranges.perfect)) {
+            perfect++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingJ.shift();
+          } else {
+            good++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingJ.shift();
+          }
+        } else {            
+          good++;
+          console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          expectingJ.shift();
+        }
       }
 
+      /*
       let isPerfectOrGoodKeyJ = false;
-      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k++) {
         if(ctx.getImageData(x0KeyJ, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             isPerfectOrGoodKeyJ = true;
             break;
           }
           good++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           isPerfectOrGoodKeyJ = true;
           break;
         }
@@ -883,7 +1018,6 @@ window.addEventListener("keydown", (event) => {
       isPerfectOrGoodKeyJ = false;
       */
 
-      console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
       break;
 
     case "k": 
@@ -893,19 +1027,37 @@ window.addEventListener("keydown", (event) => {
         sourceK.start();
       } else {beep(10, 2*523.25, 200)}
 
-      if(expectingK.length > 0){
-        expectingK.shift();
+      if(expectingK.length > 0) {
+        //console.log("Estou aqui no expectingS.length > 0, and the value of it is: ", expectingS);
+        if(objectOfArraysOfKeys.keyK[expectingK[0]] <= (y0 + y0Key + ranges.perfect + tileHeight)) {
+          if(objectOfArraysOfKeys.keyK[expectingK[0]] >= (y0 + y0Key - ranges.perfect)) {
+            perfect++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingK.shift();
+          } else {
+            good++;
+            console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            expectingK.shift();
+          }
+        } else {            
+          good++;
+          console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          expectingK.shift();
+        }
       }
 
+      /*
       let isPerfectOrGoodKeyK = false;
-      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k+=tileHeight-1) {
+      for(k=y0Key-ranges.good; k<=y0+865+ranges.good; k++) {
         if(ctx.getImageData(x0KeyK, k, 1, 1).data[0] == 170) {
           if(k >= y0 + 850 - ranges.perfect && k<= y0 + 865 + ranges.perfect) {
             perfect++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             isPerfectOrGoodKeyK = true;
             break;
           }
           good++;
+console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           isPerfectOrGoodKeyK = true;
           break;
         }
@@ -917,7 +1069,7 @@ window.addEventListener("keydown", (event) => {
       isPerfectOrGoodKeyK = false;
       */
 
-      console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+      
       break;
 
     case "l": 
@@ -951,7 +1103,7 @@ window.addEventListener("keydown", (event) => {
   document.getElementById("good").textContent = `Good: ${good}`;
   document.getElementById("miss").textContent = `Miss: ${miss}`;
 
-  console.log("ranges.good: ", ranges.good + " " + "ranges.perfect: ", ranges.perfect);
+  //console.log("ranges.good: ", ranges.good + " " + "ranges.perfect: ", ranges.perfect);
 
   // Cancel the default action to avoid it being handled twice
   event.preventDefault();
@@ -1016,7 +1168,6 @@ console.log("projectO2 carregado com sucesso");
   //criar testes! (pedir ajuda do chatGPT, para ter exemplos, por exemplo)
  
   //melhorar a function music1Button() na parte do clear interval. Executar o resto depois que isso ocorrer. Assim, não precisarei dos outros timeouts
-  //posicionar melhor os document.getElementById("miss").textContent = `Miss: ${miss}`;, principalmente dentro da função getArrayOfNotesAndDraw
 
   //? Já que tem que dar load a cada vez que toca (não pode dar start() mais que uma vez), fazer uma função só ?
     
@@ -1041,6 +1192,10 @@ console.log("projectO2 carregado com sucesso");
   //fazer multiplayer
   //gravar highscore e só resetar se apertar no botão reset
   
+  //diminuir um pouco a velocidade inicial da música
+  //fazer que o miss, good e perfect todos atuem no y (miss já faz isso, o perfect e o good usam getImageData)
+  //ver se isso nao vai ter lag
+  //regular a dificuldade
     //fazer um sistema de miss
       //mais fácil: completar com miss no final o que faltou de notas (total de notas - good - perfect = miss), se o cara só tem 3 miss e deveria ser 30, completar
       //mais top: dar miss se era pra ter apertado a tecla e não apertou
@@ -1060,8 +1215,6 @@ console.log("projectO2 carregado com sucesso");
     //vantagem: evita fazer os fillRect para tiles que nem estão na tela (não chegaram ou já passaram) 
 
     //bugs
-       //miss ficou mais bugado desde a implementação da feature que atribui miss a uma nota não apertada
-        //POSSÍVEL SOLUÇÃO: deixar de contabilizar o miss fora dessa situação. Se apertar quando não deve, não considerar um miss.
       //parece haver um delay para a verificação de perfect, good, miss. É como se o range se deslocasse para cima. Verificar isso.
         //ver conversa com Igor sobre isso
       //música quando tocada muito rápida apresenta bugs no score
@@ -1090,13 +1243,17 @@ console.log("projectO2 carregado com sucesso");
   //tirar o lixo do código (códigos que não são úteis)
 
   //fazer uma função createAndLoadAudioFile(note) que retorna um source para dar start()
+  //miss ficou mais bugado desde a implementação da feature que atribui miss a uma nota não apertada
+  //POSSÍVEL SOLUÇÃO: deixar de contabilizar o miss fora dessa situação. Se apertar quando não deve, não considerar um miss.
+
+  //posicionar melhor os document.getElementById("miss").textContent = `Miss: ${miss}`;, principalmente dentro da função getArrayOfNotesAndDraw
 
 
 
 
   
 //Novidades deste commit:
-  //Add a miss counter if no key is pressed when supposed to (and now it is the only way to miss). Change createAndLoad7AudioFiles(7notes) to createAndLoadAudioFile(note).
+  //correct the miss count bug, change the getImageData for y check, change the difficulty standards
   
 
 
