@@ -112,6 +112,29 @@ const keysArray = [
   new Key("rgb(255, 0, 0)", x0KeyL, y0Key, keyWidth, keyHeight)
 ];
 
+let goodColor = "rgb(0, 255, 94)"; //11, 215, 52
+let perfectColor = "rgb(0, 255, 94)"; //11, 215, 52
+let goodPadding = 4;
+let perfectPadding = 8;
+
+let goodEffectControl = {
+  s: false,
+  d: false,
+  f: false,
+  spaceBar: false,
+  j: false,
+  k: false,
+}
+
+let perfectEffectControl = {
+  s: false,
+  d: false,
+  f: false,
+  spaceBar: false,
+  j: false,
+  k: false,
+}
+
 function createAndLoadAudioFile(note) {
   //notes should be informed using flat notation (not sharp)
 
@@ -148,7 +171,7 @@ function createAndLoadAudioFile(note) {
 
 
   // set the gains for each channel
-  gainNode.gain.value = 0.8; // channel 1 volume
+  gainNode.gain.value = 1.0; // channel 1 volume
 
 
   // start playing the audio sources
@@ -616,6 +639,25 @@ function draw1() {
   ctx.fillStyle = "rgb(0, 0, 0)";
   ctx.fillRect(x0, y0, 915, 915);
 
+  //repainting goodEffect
+  keyEffectGood(0, goodColor, goodPadding, "s", goodEffectControl.s);
+  keyEffectGood(1, goodColor, goodPadding, "d", goodEffectControl.d);
+  keyEffectGood(2, goodColor, goodPadding, "f", goodEffectControl.f);
+  keyEffectGood(3, goodColor, goodPadding, "spaceBar", goodEffectControl.spaceBar);
+  keyEffectGood(4, goodColor, goodPadding, "j", goodEffectControl.j);
+  keyEffectGood(5, goodColor, goodPadding, "k", goodEffectControl.k);
+
+  //repainting perfectEffect
+  keyEffectPerfect(0, perfectColor, perfectPadding, "s", perfectEffectControl.s);
+  keyEffectPerfect(1, perfectColor, perfectPadding, "d", perfectEffectControl.d);
+  keyEffectPerfect(2, perfectColor, perfectPadding, "f", perfectEffectControl.f);
+  keyEffectPerfect(3, perfectColor, perfectPadding, "spaceBar", perfectEffectControl.spaceBar);
+  keyEffectPerfect(4, perfectColor, perfectPadding, "j", perfectEffectControl.j);
+  keyEffectPerfect(5, perfectColor, perfectPadding, "k", perfectEffectControl.k);
+
+  
+
+
   drawTilesAndKeys(keysArray);
   //teste();
   lastIndexes = getArrayOfNotesAndDraw(music1TilesY, y, lastIndexes, tileColor, keysArray, tileWidth, tileHeight).lastIndexes;
@@ -733,6 +775,14 @@ function beep(vol, freq, duration) {
 }
 
 //beep(100,600,200);
+let isGoodKey = {
+  s: false,
+  d: false,
+  f: false,
+  spaceBar: false,
+  j: false,
+  k: false
+}
 
 window.addEventListener("keydown", (event) => {
   if (event.defaultPrevented) {
@@ -762,18 +812,24 @@ window.addEventListener("keydown", (event) => {
           if(objectOfArraysOfKeys.keyS[expectingS[0]] >= (y0 + y0Key - ranges.perfect)) {
             perfect++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            perfectEffectControl.s = true;
+            keyEffectPerfect(0, perfectColor, perfectPadding, "s");
             isPerfectOrGoodKeyS = true;
             expectingS.shift();
           } else {
             good++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             isPerfectOrGoodKeyS = true;
+            goodEffectControl.s = true;
+            keyEffectGood(0, goodColor, goodPadding, "s");
             expectingS.shift();
           }
         } else {            
           good++;
           console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           isPerfectOrGoodKeyS = true;
+          goodEffectControl.s = true;
+          keyEffectGood(0, goodColor, goodPadding, "s");
           expectingS.shift();
         }
       } //if I want to add a miss cause when a note is played when no notes are expected, here is the place:
@@ -827,15 +883,21 @@ console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           if(objectOfArraysOfKeys.keyD[expectingD[0]] >= (y0 + y0Key - ranges.perfect)) {
             perfect++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            perfectEffectControl.d = true;
+            keyEffectPerfect(1, perfectColor, perfectPadding, "d");
             expectingD.shift();
           } else {
             good++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            goodEffectControl.d = true;
+            keyEffectGood(1, goodColor, goodPadding, "d");
             expectingD.shift();
           }
         } else {            
           good++;
           console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          goodEffectControl.d = true;
+          keyEffectGood(1, goodColor, goodPadding, "d");
           expectingD.shift();
         }
       }
@@ -879,15 +941,21 @@ console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           if(objectOfArraysOfKeys.keyF[expectingF[0]] >= (y0 + y0Key - ranges.perfect)) {
             perfect++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            perfectEffectControl.f = true;
+            keyEffectPerfect(2, perfectColor, perfectPadding, "f");
             expectingF.shift();
           } else {
             good++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            goodEffectControl.f = true;
+            keyEffectGood(2, goodColor, goodPadding, "f");
             expectingF.shift();
           }
         } else {            
           good++;
           console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          goodEffectControl.f = true;
+          keyEffectGood(2, goodColor, goodPadding, "f");
           expectingF.shift();
         }
       }
@@ -931,15 +999,21 @@ console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           if(objectOfArraysOfKeys.keySpaceBar[expectingSpaceBar[0]] >= (y0 + y0Key - ranges.perfect)) {
             perfect++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            perfectEffectControl.spaceBar = true;
+            keyEffectPerfect(3, perfectColor, perfectPadding, "spaceBar");
             expectingSpaceBar.shift();
           } else {
             good++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            goodEffectControl.spaceBar = true;
+            keyEffectGood(3, goodColor, goodPadding, "spaceBar");
             expectingSpaceBar.shift();
           }
         } else {            
           good++;
           console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          goodEffectControl.spaceBar = true;
+          keyEffectGood(3, goodColor, goodPadding, "spaceBar");
           expectingSpaceBar.shift();
         }
       }
@@ -982,15 +1056,21 @@ console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
           if(objectOfArraysOfKeys.keyJ[expectingJ[0]] >= (y0 + y0Key - ranges.perfect)) {
             perfect++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            perfectEffectControl.j = true;
+            keyEffectPerfect(4, perfectColor, perfectPadding, "j");
             expectingJ.shift();
           } else {
             good++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            goodEffectControl.j = true;
+            keyEffectGood(4, goodColor, goodPadding, "j");
             expectingJ.shift();
           }
         } else {            
           good++;
           console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          goodEffectControl.j = true;
+          keyEffectGood(4, goodColor, goodPadding, "j");
           expectingJ.shift();
         }
       }
@@ -1032,16 +1112,22 @@ console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
         if(objectOfArraysOfKeys.keyK[expectingK[0]] <= (y0 + y0Key + ranges.perfect + tileHeight)) {
           if(objectOfArraysOfKeys.keyK[expectingK[0]] >= (y0 + y0Key - ranges.perfect)) {
             perfect++;
+            perfectEffectControl.k = true;
+            keyEffectPerfect(5, perfectColor, perfectPadding, "k");
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
             expectingK.shift();
           } else {
             good++;
             console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+            goodEffectControl.k = true;
+            keyEffectGood(5, goodColor, goodPadding, "k");
             expectingK.shift();
           }
         } else {            
           good++;
           console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
+          goodEffectControl.k = true;
+          keyEffectGood(5, goodColor, goodPadding, "k");
           expectingK.shift();
         }
       }
@@ -1090,11 +1176,14 @@ console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
     case "Escape":
       // Do something for "esc" key press.
       break;
+
     case "q":
-      console.log("speedFactor: ", speedFactor); //debuggin purposes
-      //createAndLoad7AudioFiles("C2", "C3", "C4", "E4", "G4", "Bb4", "C5");
-      source.sourceS.start();
-        break;
+      keyEffectGood(0, goodColor, goodPadding, "s");
+      break;
+
+    case "x":
+      break;
+
     default:
       return; // Quit when this doesn't handle the key event.
   }
@@ -1110,7 +1199,7 @@ console.log(`perfect: ${perfect} \ngood: ${good} \nmiss: ${miss}`);
 }, true);
 
 
-/*
+
 window.addEventListener("keyup", (event) => {
   if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
@@ -1120,32 +1209,43 @@ window.addEventListener("keyup", (event) => {
   switch (event.key) {
 
     case "s": 
-      source.sourceS.stop();
+      /*
+      if(isGoodKey.s) {
+        repaintBack(0, goodPadding)
+        isGoodKey.s = false
+      }
+      */
+      //source.sourceS.stop();
       //gainNodeS.gain.value = 0.4; // channel 1 volume
       break;
       
     case "d": 
-      source.sourceD.stop();
+      
+      //source.sourceD.stop();
       break;
 
     case "f": 
-      source.sourceF.stop();
+     
+      //source.sourceF.stop();
       break;
 
     case " ": 
-      source.sourceSpaceBar.stop();
+
+      //source.sourceSpaceBar.stop();
       break;
 
     case "j": 
-      source.sourceJ.stop();
+
+      //source.sourceJ.stop();
       break;
         
     case "k": 
-      source.sourceK.stop();
+
+      //source.sourceK.stop();
       break;
 
     case "l": 
-      source.sourceL.stop();  
+      //source.sourceL.stop();  
       break;
 
     default:
@@ -1156,7 +1256,98 @@ window.addEventListener("keyup", (event) => {
   event.preventDefault();
 }, true);
 
-*/
+
+
+function repaintBack(keyIndex, padding, key, control, color = "rgb(0, 0, 0)") {
+  //console.log(padding, keyIndex, color)
+    
+  ctx.fillStyle = color;
+
+  //left square
+  ctx.fillRect(keysArray[keyIndex].x0 - padding, keysArray[keyIndex].y0, padding, keysArray[keyIndex].height);
+
+  //right square
+  ctx.fillRect(keysArray[keyIndex].x0 + keysArray[keyIndex].width, keysArray[keyIndex].y0, padding, keysArray[keyIndex].height);
+
+  //top rectangle
+  ctx.fillRect(keysArray[keyIndex].x0 - padding, keysArray[keyIndex].y0 - padding, keysArray[keyIndex].width + 2*padding, padding);
+
+  //bottom rectangle
+  ctx.fillRect(keysArray[keyIndex].x0 - padding, keysArray[keyIndex].y0 + keysArray[keyIndex].height, keysArray[keyIndex].width + 2*padding, padding);
+
+  switch(key) {
+    case "s":
+      control.s = false;
+      break
+  
+    case "d":
+      control.d = false;
+      break
+  
+    case "f":
+      control.f = false;
+      break
+  
+    case "spaceBar":
+      control.spaceBar = false;
+      break
+  
+    case "j":
+      control.j = false;
+      break
+  
+    case "k":
+      control.k = false;
+      break
+  }
+}
+
+function keyEffectGood(keyIndex, goodColor, goodPadding, key, control = true) {
+  if(control) {
+    ctx.fillStyle = goodColor;
+
+    //left square
+    ctx.fillRect(keysArray[keyIndex].x0 - goodPadding, keysArray[keyIndex].y0, goodPadding, keysArray[keyIndex].height);
+
+    //right square
+    ctx.fillRect(keysArray[keyIndex].x0 + keysArray[keyIndex].width, keysArray[keyIndex].y0, goodPadding, keysArray[keyIndex].height);
+
+    //top rectangle
+    ctx.fillRect(keysArray[keyIndex].x0 - goodPadding, keysArray[keyIndex].y0 - goodPadding, keysArray[keyIndex].width + 2*goodPadding, goodPadding);
+
+    //bottom rectangle
+    ctx.fillRect(keysArray[keyIndex].x0 - goodPadding, keysArray[keyIndex].y0 + keysArray[keyIndex].height, keysArray[keyIndex].width + 2*goodPadding, goodPadding);
+            
+
+    setTimeout(repaintBack, 128, keyIndex, goodPadding, key, goodEffectControl);
+  }
+
+}
+
+function keyEffectPerfect(keyIndex, perfectColor, perfectPadding, key, control = true) {
+  if(control) {
+    ctx.fillStyle = perfectColor;
+
+    //left square
+    ctx.fillRect(keysArray[keyIndex].x0 - perfectPadding, keysArray[keyIndex].y0, perfectPadding, keysArray[keyIndex].height);
+
+    //right square
+    ctx.fillRect(keysArray[keyIndex].x0 + keysArray[keyIndex].width, keysArray[keyIndex].y0, perfectPadding, keysArray[keyIndex].height);
+
+    //top rectangle
+    ctx.fillRect(keysArray[keyIndex].x0 - perfectPadding, keysArray[keyIndex].y0 - perfectPadding, keysArray[keyIndex].width + 2*perfectPadding, perfectPadding);
+
+    //bottom rectangle
+    ctx.fillRect(keysArray[keyIndex].x0 - perfectPadding, keysArray[keyIndex].y0 + keysArray[keyIndex].height, keysArray[keyIndex].width + 2*perfectPadding, perfectPadding);
+
+
+    setTimeout(repaintBack, 128, keyIndex, perfectPadding, key, perfectEffectControl);
+  }
+}
+
+
+
+
 
 console.log(ctx.getImageData(315, 850, 1, 1).data);
 
@@ -1192,33 +1383,20 @@ console.log("projectO2 carregado com sucesso");
   //fazer multiplayer
   //gravar highscore e só resetar se apertar no botão reset
   
-  //diminuir um pouco a velocidade inicial da música
-  //fazer que o miss, good e perfect todos atuem no y (miss já faz isso, o perfect e o good usam getImageData)
-  //ver se isso nao vai ter lag
-  //regular a dificuldade
-    //fazer um sistema de miss
-      //mais fácil: completar com miss no final o que faltou de notas (total de notas - good - perfect = miss), se o cara só tem 3 miss e deveria ser 30, completar
-      //mais top: dar miss se era pra ter apertado a tecla e não apertou
+  
   //pegar uma segunda música, de videogame (dueto, de preferência)
   //fazer o user poder trocar o timbre do oscillator
   //fazer uma música com timbre de piano real, e uma tecla tocar um acorde (mais que uma nota)
     //talvez fazer também que uma tecla toca um pequeno trechinho
   //fazer um pwa (reconhecer quando é um smartphone e reconhecer toques na tela invés de teclas)
+  
   //fazer um efeito ao lado das teclas para indicar que foram apertadas e que houve perfect, good ou miss
   //mostrar o SDF SpaceBar JKL em algum lugar
-  //fazer
-    //um array (ou object array) para todas as notas da música
-    //um buffer (que carrega toda a música)
-    //um screen (que armazena o que está na tela)
-    //função drawMusicTiles: buffer recebe o array da música e screen carrega o que está no buffer conforme vai saindo da tela
-      //Imprime screen 
-    //vantagem: evita fazer os fillRect para tiles que nem estão na tela (não chegaram ou já passaram) 
-
-    //bugs
+  
+      //bugs
       //parece haver um delay para a verificação de perfect, good, miss. É como se o range se deslocasse para cima. Verificar isso.
         //ver conversa com Igor sobre isso
       //música quando tocada muito rápida apresenta bugs no score
-      //calibrar melhor as dificuldades (facilitar todas)
       //por que se aperta as teclas muito rápido muitas vezes para de soar? mudar o método de tocar som
 
 
@@ -1247,13 +1425,26 @@ console.log("projectO2 carregado com sucesso");
   //POSSÍVEL SOLUÇÃO: deixar de contabilizar o miss fora dessa situação. Se apertar quando não deve, não considerar um miss.
 
   //posicionar melhor os document.getElementById("miss").textContent = `Miss: ${miss}`;, principalmente dentro da função getArrayOfNotesAndDraw
+  //diminuir um pouco a velocidade inicial da música
+  //fazer que o miss, good e perfect todos atuem no y (miss já faz isso, o perfect e o good usam getImageData)
+  //regular a dificuldade
+    //fazer um sistema de miss
+      //mais fácil: completar com miss no final o que faltou de notas (total de notas - good - perfect = miss), se o cara só tem 3 miss e deveria ser 30, completar
+      //mais top: dar miss se era pra ter apertado a tecla e não apertou
+  //fazer
+    //um array (ou object array) para todas as notas da música
+    //um buffer (que carrega toda a música)
+    //um screen (que armazena o que está na tela)
+    //função drawMusicTiles: buffer recebe o array da música e screen carrega o que está no buffer conforme vai saindo da tela
+      //Imprime screen 
+    //vantagem: evita fazer os fillRect para tiles que nem estão na tela (não chegaram ou já passaram) 
 
 
 
 
   
 //Novidades deste commit:
-  //correct the miss count bug, change the getImageData for y check, change the difficulty standards
+  //correct the miss count bug, change the getImageData for y check, change the difficulty and speed standards and defaults
   
 
 
