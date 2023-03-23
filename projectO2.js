@@ -112,6 +112,29 @@ const keysArray = [
   new Key("rgb(255, 0, 0)", x0KeyL, y0Key, keyWidth, keyHeight)
 ];
 
+
+
+function drawKeyLetters() {
+  ctx.font = '24px serif';
+  ctx.fillStyle = "rgb(255, 255, 255)";
+
+  ctx.fillText('S', keysArray[0].x0 + 28, keysArray[0].y0 - keysArray[0].height);
+  ctx.fillText('D', keysArray[1].x0 + 28, keysArray[1].y0 - keysArray[1].height);
+  ctx.fillText('F', keysArray[2].x0 + 28, keysArray[2].y0 - keysArray[2].height);
+
+  ctx.fillText('J', keysArray[4].x0 + 28, keysArray[4].y0 - keysArray[4].height);
+  ctx.fillText('K', keysArray[5].x0 + 28, keysArray[5].y0 - keysArray[5].height);
+  ctx.fillText('L', keysArray[6].x0 + 28, keysArray[6].y0 - keysArray[6].height);
+
+  ctx.font = '18px serif';
+  ctx.fillText('SpaceBar', keysArray[3].x0, keysArray[3].y0 - keysArray[3].height);
+
+}
+
+drawKeyLetters();
+
+
+
 let goodColor = "rgb(0, 255, 94)"; //11, 215, 52
 let perfectColor = "rgb(0, 255, 94)"; //11, 215, 52
 let goodPadding = 4;
@@ -705,6 +728,9 @@ function music1Button() {
     perfect = 0;
     document.getElementById("perfect").textContent = `Perfect: ${perfect}`;
     document.getElementById("good").textContent = `Good: ${good}`;
+
+    setTimeout(drawKeyLetters, 25);
+
     setTimeout(function () {document.getElementById("miss").textContent = `Miss: ${miss}`}, 22);
 
   } else {
@@ -1390,7 +1416,6 @@ console.log("projectO2 carregado com sucesso");
     //talvez fazer também que uma tecla toca um pequeno trechinho
   //fazer um pwa (reconhecer quando é um smartphone e reconhecer toques na tela invés de teclas)
   
-  //fazer um efeito ao lado das teclas para indicar que foram apertadas e que houve perfect, good ou miss
   //mostrar o SDF SpaceBar JKL em algum lugar
   
       //bugs
@@ -1438,6 +1463,8 @@ console.log("projectO2 carregado com sucesso");
     //função drawMusicTiles: buffer recebe o array da música e screen carrega o que está no buffer conforme vai saindo da tela
       //Imprime screen 
     //vantagem: evita fazer os fillRect para tiles que nem estão na tela (não chegaram ou já passaram) 
+
+    //fazer um efeito ao lado das teclas para indicar que foram apertadas e que houve perfect, good ou miss
 
 
 
